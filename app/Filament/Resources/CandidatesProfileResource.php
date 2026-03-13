@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CandidatesProfileResource\Pages;
 use App\Filament\Resources\CandidatesProfileResource\RelationManagers;
+use App\Jobs\ProcessCandidateJobSuggestions;
 use App\Models\Candidates;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -251,6 +253,25 @@ class CandidatesProfileResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\Action::make('ai_suggest_jobs')
+                    ->label('AI Suggest Jobs')
+                    ->icon('heroicon-o-cpu-chip')
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->modalHeading('AI Job Suggestions')
+                    ->modalDescription('This will analyze all open job openings and rank them by compatibility with this candidate.')
+                    ->action(function (Candidates $record) {
+                        ProcessCandidateJobSuggestions::dispatch($record->id);
+
+                        Notification::make()->title('AI Match Queued')->success()
+                            ->body('Job suggestion analysis has been queued for this candidate.')->send();
+                    }),
+                Tables\Actions\Action::make('view_suggested_jobs')
+                    ->label('Suggested Jobs')
+                    ->icon('heroicon-o-chart-bar')
+                    ->color('gray')
+                    ->url(fn (Candidates $record) => CandidatesProfileResource::getUrl('ai-suggested-jobs', ['record' => $record]))
+                    ->visible(fn (Candidates $record) => $record->matchScores()->exists()),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
@@ -280,6 +301,7 @@ class CandidatesProfileResource extends Resource
             'create' => Pages\CreateCandidatesProfile::route('/create'),
             'view' => Pages\ViewCandidatesProfile::route('/{record}'),
             'edit' => Pages\EditCandidatesProfile::route('/{record}/edit'),
+            'ai-suggested-jobs' => Pages\AiSuggestedJobs::route('/{record}/ai-suggested-jobs'),
         ];
     }
 

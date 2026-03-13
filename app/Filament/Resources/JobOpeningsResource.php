@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Enums\JobOpeningStatus;
 use App\Filament\Resources\JobOpeningsResource\Pages;
 use App\Filament\Resources\JobOpeningsResource\RelationManagers;
+use App\Jobs\ProcessCandidateMatching;
 use App\Models\Departments;
 use App\Models\JobOpenings;
 use App\Models\User;
@@ -178,6 +179,19 @@ class JobOpeningsResource extends Resource
                     ->icon('heroicon-m-plus-small'),
             ])
             ->actions([
+                Tables\Actions\Action::make('ai_match_candidates')
+                    ->label('AI Match')
+                    ->icon('heroicon-o-cpu-chip')
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->modalHeading('Run AI Match for All Candidates')
+                    ->modalDescription('This will queue AI matching analysis of all candidates against this job opening.')
+                    ->action(function (JobOpenings $record) {
+                        ProcessCandidateMatching::dispatch($record->id);
+
+                        Notification::make()->title('AI Match Queued')->success()
+                            ->body('Matching analysis for all candidates has been queued.')->send();
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -251,6 +265,7 @@ class JobOpeningsResource extends Resource
             'create' => Pages\CreateJobOpenings::route('/create'),
             'view' => Pages\ViewJobOpenings::route('/{record}'),
             'edit' => Pages\EditJobOpenings::route('/{record}/edit'),
+            'ai-candidates' => Pages\AiTopCandidates::route('/{record}/ai-candidates'),
         ];
     }
 

@@ -3,19 +3,28 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Enums\JobCandidateStatus;
+use App\Filament\Enums\InterviewStatus;
 use App\Filament\Resources\JobCandidatesResource\Pages;
 use App\Filament\Resources\JobCandidatesResource\RelationManagers;
+use App\Jobs\ProcessCandidateMatching;
+use App\Models\CandidateMatchScore;
 use App\Models\Candidates;
+use App\Models\Interview;
 use App\Models\JobCandidates;
 use App\Models\JobOpenings;
 use App\Models\User;
+use App\Notifications\Candidates\InterviewScheduledNotification;
+use App\Services\AI\CandidateMatchingService;
+use App\Settings\JitsiSettings;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
 
 class JobCandidatesResource extends Resource
 {
@@ -183,17 +192,155 @@ class JobCandidatesResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('ai_match_score')
+                    ->label('AI Match %')
+                    ->getStateUsing(function (JobCandidates $record): ?string {
+                        $match = CandidateMatchScore::where('candidate_id', $record->candidate)
+                            ->where('job_opening_id', $record->JobId)
+                            ->first();
+
+                        return $match ? number_format($match->overall_score, 1) . '%' : '—';
+                    })
+                    ->badge()
+                    ->color(fn (JobCandidates $record): string => self::getMatchScoreColor($record))
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderByRaw(
+                            "(SELECT overall_score FROM candidate_match_scores WHERE candidate_match_scores.candidate_id = job_candidates.candidate AND candidate_match_scores.job_opening_id = job_candidates.JobId LIMIT 1) {$direction}"
+                        );
+                    }),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\Action::make('ai_match')
+                    ->label('AI Match')
+                    ->icon('heroicon-o-cpu-chip')
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->modalHeading('Run AI Match Analysis')
+                    ->modalDescription('This will analyze the candidate against the job opening using AI and calculate a match score.')
+                    ->action(function (JobCandidates $record) {
+                        if (! $record->candidate || ! $record->JobId) {
+                            Notification::make()->title('Missing data')->danger()
+                                ->body('Candidate or Job is not associated.')->send();
+
+                            return;
+                        }
+
+                        $candidate = Candidates::find($record->candidate);
+                        $job = JobOpenings::find($record->JobId);
+
+                        if (! $candidate || ! $job) {
+                            Notification::make()->title('Not found')->danger()
+                                ->body('Candidate or Job record not found.')->send();
+
+                            return;
+                        }
+
+                        try {
+                            $service = app(CandidateMatchingService::class);
+                            $result = $service->matchCandidateToJob($candidate, $job);
+
+                            Notification::make()->title('AI Match Complete')->success()
+                                ->body("Match score: {$result->overall_score}%")->send();
+                        } catch (\Throwable $e) {
+                            Notification::make()->title('AI Match Failed')->danger()
+                                ->body($e->getMessage())->send();
+                        }
+                    }),
+                Tables\Actions\Action::make('view_match_details')
+                    ->label('Match Details')
+                    ->icon('heroicon-o-chart-bar')
+                    ->color('gray')
+                    ->modalHeading('AI Match Score Details')
+                    ->modalContent(function (JobCandidates $record) {
+                        $match = CandidateMatchScore::where('candidate_id', $record->candidate)
+                            ->where('job_opening_id', $record->JobId)
+                            ->first();
+
+                        return view('filament.components.match-score-details', ['match' => $match]);
+                    })
+                    ->modalSubmitAction(false)
+                    ->visible(function (JobCandidates $record): bool {
+                        return CandidateMatchScore::where('candidate_id', $record->candidate)
+                            ->where('job_opening_id', $record->JobId)
+                            ->exists();
+                    }),
+                Tables\Actions\Action::make('schedule_interview')
+                    ->label('Schedule Interview')
+                    ->icon('heroicon-o-calendar')
+                    ->color('warning')
+                    ->form([
+                        Forms\Components\TextInput::make('title')
+                            ->required()
+                            ->default(fn (JobCandidates $record) => 'Interview - ' . ($record->candidateProfile?->FirstName ?? '') . ' ' . ($record->candidateProfile?->LastName ?? '')),
+                        Forms\Components\Textarea::make('description')
+                            ->rows(2),
+                        Forms\Components\DateTimePicker::make('scheduled_at')
+                            ->label('Date & Time')
+                            ->required()
+                            ->native(false)
+                            ->minutesStep(15)
+                            ->default(now()->addDay()->setHour(10)->setMinute(0)),
+                        Forms\Components\TextInput::make('duration_minutes')
+                            ->label('Duration (minutes)')
+                            ->numeric()
+                            ->required()
+                            ->default(fn () => app(JitsiSettings::class)->default_meeting_duration ?? 60)
+                            ->minValue(15)
+                            ->maxValue(480),
+                    ])
+                    ->action(function (JobCandidates $record, array $data) {
+                        $interview = Interview::create([
+                            'job_candidate_id' => $record->id,
+                            'scheduled_by' => auth()->id(),
+                            'title' => $data['title'],
+                            'description' => $data['description'] ?? null,
+                            'scheduled_at' => $data['scheduled_at'],
+                            'duration_minutes' => $data['duration_minutes'],
+                            'status' => InterviewStatus::Scheduled->value,
+                        ]);
+
+                        $record->update(['CandidateStatus' => JobCandidateStatus::InterviewScheduled->value]);
+
+                        $candidate = $record->candidateProfile;
+                        if ($candidate) {
+                            $candidate->notify(new InterviewScheduledNotification($interview));
+                        }
+
+                        Notification::make()
+                            ->title('Interview Scheduled')
+                            ->success()
+                            ->body("Interview scheduled for {$interview->scheduled_at->format('M d, Y H:i')}")
+                            ->send();
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('bulk_ai_match')
+                        ->label('AI Match Selected')
+                        ->icon('heroicon-o-cpu-chip')
+                        ->color('info')
+                        ->requiresConfirmation()
+                        ->modalHeading('Run AI Match for Selected Candidates')
+                        ->modalDescription('This will queue AI match analysis for all selected candidates.')
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function (Collection $records) {
+                            $queued = 0;
+                            foreach ($records as $record) {
+                                if ($record->candidate && $record->JobId) {
+                                    ProcessCandidateMatching::dispatch($record->JobId, $record->candidate);
+                                    $queued++;
+                                }
+                            }
+
+                            Notification::make()->title('AI Match Queued')->success()
+                                ->body("Queued matching analysis for {$queued} candidates.")->send();
+                        }),
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
@@ -208,6 +355,7 @@ class JobCandidatesResource extends Resource
     {
         return [
             RelationManagers\AttachmentsRelationManager::class,
+            RelationManagers\InterviewsRelationManager::class,
         ];
     }
 
@@ -227,5 +375,23 @@ class JobCandidatesResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    protected static function getMatchScoreColor(JobCandidates $record): string
+    {
+        $match = CandidateMatchScore::where('candidate_id', $record->candidate)
+            ->where('job_opening_id', $record->JobId)
+            ->first();
+
+        if (! $match) {
+            return 'gray';
+        }
+
+        return match (true) {
+            $match->overall_score >= 80 => 'success',
+            $match->overall_score >= 60 => 'info',
+            $match->overall_score >= 40 => 'warning',
+            default => 'danger',
+        };
     }
 }

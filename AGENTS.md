@@ -99,26 +99,27 @@ Conduct video interviews directly within the platform using Jitsi Meet.
 #### Implementation Plan
 
 **Phase 1: Jitsi Integration**
-- [ ] Create Jitsi configuration in settings
-- [ ] Install Jitsi Meet SDK (iframe API)
-- [ ] Create `JitsiService` for meeting management
+- [x] Create Jitsi configuration in settings
+- [x] Install Jitsi Meet SDK (iframe API)
+- [x] Create `JitsiService` for meeting management
+- [x] Add Jitsi containers to Docker Compose (web, prosody, jicofo, jvb)
 
 **Phase 2: Interview Scheduling**
-- [ ] Create `Interview` model and migration
-- [ ] Add interview scheduling in Job Candidates
-- [ ] Implement interview time slot management
-- [ ] Add email/SMS notifications to candidates
+- [x] Create `Interview` model and migration
+- [x] Add interview scheduling in Job Candidates
+- [x] Implement interview time slot management
+- [x] Add email notifications to candidates
 
 **Phase 3: Meeting Interface**
-- [ ] Create Jitsi meeting component/page
-- [ ] Support scheduled meetings with unique URLs
-- [ ] Add recording option (Jitsi cloud recording)
-- [ ] Implement waiting room concept
+- [x] Create Jitsi meeting component/page
+- [x] Support scheduled meetings with unique URLs
+- [x] Add recording option (Jitsi cloud recording)
+- [x] Implement waiting room concept
 
 **Phase 4: Interview Management**
-- [ ] Add interview notes/feedback form
-- [ ] Interview score/rating system
-- [ ] Interview history timeline
+- [x] Add interview notes/feedback form
+- [x] Interview score/rating system
+- [x] Interview history timeline
 - [ ] Calendar integration (Google Calendar, Outlook)
 
 #### Jitsi Configuration

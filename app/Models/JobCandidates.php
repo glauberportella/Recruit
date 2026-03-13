@@ -70,6 +70,11 @@ class JobCandidates extends Model
         return $this->hasMany(Attachments::class, 'attachmentOwner', 'id');
     }
 
+    public function interviews(): HasMany
+    {
+        return $this->hasMany(Interview::class, 'job_candidate_id');
+    }
+
     /**
      * @return array[]
      */

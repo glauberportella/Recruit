@@ -48,6 +48,11 @@ class ViewJobOpenings extends ViewRecord
                 }),
             EditAction::make()
                 ->icon('heroicon-o-pencil-square'),
+            Action::make('ai_top_candidates')
+                ->label('AI Top Candidates')
+                ->icon('heroicon-o-cpu-chip')
+                ->color('info')
+                ->url(fn (Model $record) => JobOpeningsResource::getUrl('ai-candidates', ['record' => $record])),
             DeleteAction::make()
                 ->icon('heroicon-o-trash'),
         ];
