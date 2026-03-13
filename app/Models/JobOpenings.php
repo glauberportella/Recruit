@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
@@ -57,6 +58,16 @@ class JobOpenings extends Model
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachments::class, 'attachmentOwner', 'id');
+    }
+
+    public function matchScores(): HasMany
+    {
+        return $this->hasMany(CandidateMatchScore::class, 'job_opening_id');
+    }
+
+    public function embedding(): MorphOne
+    {
+        return $this->morphOne(Embedding::class, 'embeddable');
     }
 
     public function scopeJobStillOpen(Builder $query): void

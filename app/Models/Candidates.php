@@ -6,6 +6,7 @@ use Alfa6661\AutoNumber\AutoNumberTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\HasDatabaseNotifications;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +45,16 @@ class Candidates extends Model
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachments::class, 'attachmentOwner', 'id');
+    }
+
+    public function matchScores(): HasMany
+    {
+        return $this->hasMany(CandidateMatchScore::class, 'candidate_id');
+    }
+
+    public function embedding(): MorphOne
+    {
+        return $this->morphOne(Embedding::class, 'embeddable');
     }
 
     /**

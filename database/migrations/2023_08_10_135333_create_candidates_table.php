@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('CandidateId')->nullable();
             $table->string('email');
-            $table->string('full_name')->virtualAs('concat(FirstName, \' \', LastName)');
+            $table->string('full_name')->storedAs("\"FirstName\" || ' ' || \"LastName\"");
             $table->string('FirstName')->nullable();
             $table->string('LastName');
             $table->string('Mobile')->nullable();

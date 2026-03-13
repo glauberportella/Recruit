@@ -34,6 +34,7 @@
         "matomo/device-detector": "^6.1",
         "mews/captcha": "^3.3",
         "njxqlus/filament-progressbar": "^1.0",
+        "openai-php/laravel": "*",
         "owenvoke/blade-fontawesome": "^2.4",
         "phpsa/filament-password-reveal": "^2.0",
         "rappasoft/laravel-authentication-log": "^3.0",

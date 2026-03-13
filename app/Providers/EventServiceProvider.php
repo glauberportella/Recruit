@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Candidates;
+use App\Models\JobCandidates;
+use App\Models\JobOpenings;
+use App\Observers\CandidatesObserver;
+use App\Observers\JobCandidatesObserver;
+use App\Observers\JobOpeningsObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -25,7 +31,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        JobCandidates::observe(JobCandidatesObserver::class);
+        Candidates::observe(CandidatesObserver::class);
+        JobOpenings::observe(JobOpeningsObserver::class);
     }
 
     /**
