@@ -3,15 +3,19 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Enums\JobCandidateStatus;
+use App\Filament\Enums\InterviewStatus;
 use App\Filament\Resources\JobCandidatesResource\Pages;
 use App\Filament\Resources\JobCandidatesResource\RelationManagers;
 use App\Jobs\ProcessCandidateMatching;
 use App\Models\CandidateMatchScore;
 use App\Models\Candidates;
+use App\Models\Interview;
 use App\Models\JobCandidates;
 use App\Models\JobOpenings;
 use App\Models\User;
+use App\Notifications\Candidates\InterviewScheduledNotification;
 use App\Services\AI\CandidateMatchingService;
+use App\Settings\JitsiSettings;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -263,6 +267,54 @@ class JobCandidatesResource extends Resource
                             ->where('job_opening_id', $record->JobId)
                             ->exists();
                     }),
+                Tables\Actions\Action::make('schedule_interview')
+                    ->label('Schedule Interview')
+                    ->icon('heroicon-o-calendar')
+                    ->color('warning')
+                    ->form([
+                        Forms\Components\TextInput::make('title')
+                            ->required()
+                            ->default(fn (JobCandidates $record) => 'Interview - ' . ($record->candidateProfile?->FirstName ?? '') . ' ' . ($record->candidateProfile?->LastName ?? '')),
+                        Forms\Components\Textarea::make('description')
+                            ->rows(2),
+                        Forms\Components\DateTimePicker::make('scheduled_at')
+                            ->label('Date & Time')
+                            ->required()
+                            ->native(false)
+                            ->minutesStep(15)
+                            ->default(now()->addDay()->setHour(10)->setMinute(0)),
+                        Forms\Components\TextInput::make('duration_minutes')
+                            ->label('Duration (minutes)')
+                            ->numeric()
+                            ->required()
+                            ->default(fn () => app(JitsiSettings::class)->default_meeting_duration ?? 60)
+                            ->minValue(15)
+                            ->maxValue(480),
+                    ])
+                    ->action(function (JobCandidates $record, array $data) {
+                        $interview = Interview::create([
+                            'job_candidate_id' => $record->id,
+                            'scheduled_by' => auth()->id(),
+                            'title' => $data['title'],
+                            'description' => $data['description'] ?? null,
+                            'scheduled_at' => $data['scheduled_at'],
+                            'duration_minutes' => $data['duration_minutes'],
+                            'status' => InterviewStatus::Scheduled->value,
+                        ]);
+
+                        $record->update(['CandidateStatus' => JobCandidateStatus::InterviewScheduled->value]);
+
+                        $candidate = $record->candidateProfile;
+                        if ($candidate) {
+                            $candidate->notify(new InterviewScheduledNotification($interview));
+                        }
+
+                        Notification::make()
+                            ->title('Interview Scheduled')
+                            ->success()
+                            ->body("Interview scheduled for {$interview->scheduled_at->format('M d, Y H:i')}")
+                            ->send();
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -303,6 +355,7 @@ class JobCandidatesResource extends Resource
     {
         return [
             RelationManagers\AttachmentsRelationManager::class,
+            RelationManagers\InterviewsRelationManager::class,
         ];
     }
 

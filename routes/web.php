@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InterviewMeetingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,16 @@ Route::get('/career/job/apply/{jobReferenceNumber}', \App\Livewire\CareerApplyJo
 // Candidate Portal Invitation
 Route::get('portal/invite/{id}', \App\Livewire\Portal\Invitation\CreateCandidateUser::class)->name('portal.invite');
 Route::get('/invite/{id}', \App\Livewire\User\Invitation\CreateSystemUserForm::class)->name('system-user.invite');
+
+// Interview Meetings
+Route::get('/interview/{interview}/meeting', [InterviewMeetingController::class, 'show'])
+    ->name('interview.meeting');
+Route::post('/interview/{interview}/start', [InterviewMeetingController::class, 'start'])
+    ->name('interview.start')
+    ->middleware('auth:web');
+Route::post('/interview/{interview}/end', [InterviewMeetingController::class, 'end'])
+    ->name('interview.end')
+    ->middleware('auth:web');
 
 //Route::get('/invite', function () {
 
