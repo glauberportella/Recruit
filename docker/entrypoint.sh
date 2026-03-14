@@ -34,8 +34,10 @@ else
     php artisan migrate --force
 fi
 
-# Always ensure storage link and caches
+# Always ensure storage link, directories and caches
 php artisan storage:link 2>/dev/null || true
+mkdir -p /var/www/html/storage/app/livewire-tmp
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 php artisan icons:cache 2>/dev/null || true
 php artisan filament:upgrade --no-interaction 2>/dev/null || true
 
