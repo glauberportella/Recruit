@@ -31,10 +31,10 @@ class NewMatchingJobsNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $message = (new MailMessage)
-            ->subject("New Job Matches Found — {$this->companyName}")
-            ->greeting("Hello {$notifiable->name},")
+            ->subject(__('notifications.new_matching_jobs.subject', ['company' => $this->companyName]))
+            ->greeting(__('notifications.new_matching_jobs.greeting', ['name' => $notifiable->name]))
             ->from(env('MAIL_FROM_ADDRESS'), $this->companyName)
-            ->line("Great news! We've found new job openings that match your profile:");
+            ->line(__('notifications.new_matching_jobs.intro'));
 
         foreach ($this->matchScores->take(5) as $match) {
             /** @var CandidateMatchScore $match */
@@ -43,8 +43,8 @@ class NewMatchingJobsNotification extends Notification implements ShouldQueue
                 $score = number_format($match->overall_score, 0);
                 $message->with(new HtmlString(
                     "<strong>{$job->postingTitle}</strong> — {$score}% match" .
-                    ($job->Salary ? " | Salary: {$job->Salary}" : '') .
-                    ($job->RemoteJob ? ' | Remote' : '')
+                    ($job->Salary ? " | " . __('notifications.new_matching_jobs.salary', ['salary' => $job->Salary]) : '') .
+                    ($job->RemoteJob ? ' | ' . __('notifications.new_matching_jobs.remote') : '')
                 ));
             }
         }
@@ -53,13 +53,13 @@ class NewMatchingJobsNotification extends Notification implements ShouldQueue
 
         $remaining = $this->matchScores->count() - 5;
         if ($remaining > 0) {
-            $message->line("And {$remaining} more matching jobs!");
+            $message->line(__('notifications.new_matching_jobs.more_jobs', ['count' => $remaining]));
         }
 
         return $message
-            ->line('Log in to your candidate portal to view all recommended jobs and their detailed match analysis.')
-            ->action('View Recommended Jobs', $portalUrl)
-            ->salutation(new HtmlString("Best regards,<br/>{$this->companyName}"));
+            ->line(__('notifications.new_matching_jobs.login_info'))
+            ->action(__('notifications.new_matching_jobs.view_recommended'), $portalUrl)
+            ->salutation(new HtmlString(__('notifications.new_matching_jobs.regards') . "<br/>{$this->companyName}"));
     }
 
     public function toArray(object $notifiable): array

@@ -49,14 +49,14 @@ class WelcomeSystemUserNotification extends Notification
     {
         return (new MailMessage)
             ->from(env('MAIL_FROM_ADDRESS'), $this->company_name)
-            ->subject('Welcome to Our System - Verification & Registration Completed')
-            ->greeting("Dear {$this->user->name},")
-            ->line('We are pleased to inform you that your registration has been successfully completed, and your account is now fully active in our system.')
-            ->line('You can now log in with your registered email address and the password you created during the registration process. If you ever forget your password, you can use the "Forgot Password" feature on the login page to reset it.')
-            ->action('Login Now!', $this->login_link)
-            ->line('If you have any questions or need assistance as you explore the system, please feel free to contact our support team.')
-            ->line('Thank you for choosing our system, and we look forward to seeing the positive impact of your contributions.')
-            ->salutation(new HtmlString("Regards,<br/>{$this->company_name}"));
+            ->subject(__('notifications.welcome_system_user.subject'))
+            ->greeting(__('notifications.welcome_system_user.greeting', ['name' => $this->user->name]))
+            ->line(__('notifications.welcome_system_user.registration_complete'))
+            ->line(__('notifications.welcome_system_user.login_info'))
+            ->action(__('notifications.welcome_system_user.login_now'), $this->login_link)
+            ->line(__('notifications.welcome_system_user.support'))
+            ->line(__('notifications.welcome_system_user.thank_you'))
+            ->salutation(new HtmlString(__('notifications.welcome_system_user.regards') . "<br/>{$this->company_name}"));
     }
 
     /**

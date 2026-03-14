@@ -25,7 +25,7 @@ class ReferralsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Refer a Candidate')
+                Forms\Components\Section::make(__('admin.referrals.refer_candidate'))
                     ->schema([
                         Forms\Components\FileUpload::make('resume')
                             ->hint('Supported file types: .pdf')
@@ -33,14 +33,14 @@ class ReferralsResource extends Resource
                             ->acceptedFileTypes([
                                 'application/pdf',
                             ]),
-                        Forms\Components\Section::make('Job Recommendation')
+                        Forms\Components\Section::make(__('admin.referrals.job_recommendation'))
                             ->schema([
                                 Forms\Components\Select::make('ReferringJob')
                                     ->prefixIcon('heroicon-s-briefcase')
                                     ->options(JobOpenings::all()->pluck('JobTitle', 'id'))
                                     ->required(),
                             ]),
-                        Forms\Components\Section::make('Candidate Information')
+                        Forms\Components\Section::make(__('admin.referrals.candidate_information'))
                             ->schema([
                                 Forms\Components\Select::make('Candidate')
                                     ->prefixIcon('heroicon-s-briefcase')
@@ -50,38 +50,38 @@ class ReferralsResource extends Resource
                                     ->required()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('FirstName')
-                                            ->label('First Name'),
+                                            ->label(__('messages.first_name')),
                                         Forms\Components\TextInput::make('LastName')
-                                            ->label('Last Name'),
+                                            ->label(__('messages.last_name')),
                                         Forms\Components\TextInput::make('Mobile')
-                                            ->label('Mobile')
+                                            ->label(__('messages.mobile'))
                                             ->tel(),
                                         Forms\Components\TextInput::make('Email')
                                             ->required(),
                                         Forms\Components\TextInput::make('CurrentEmployer')
-                                            ->label('Current Employer (Company Name)'),
+                                            ->label(__('admin.job_candidates.current_employer')),
                                         Forms\Components\TextInput::make('CurrentJobTitle')
-                                            ->label('Current Job Title'),
+                                            ->label(__('admin.job_candidates.current_job_title')),
                                     ]),
                             ]),
-                        Forms\Components\Section::make('Additional Information')
+                        Forms\Components\Section::make(__('messages.additional_information'))
                             ->schema([
                                 Forms\Components\Select::make('Relationship')
                                     ->options([
-                                        'None' => 'None',
-                                        'Personally Known' => 'Personally Known',
-                                        'Former Colleague' => 'Former Colleague',
-                                        'Socially Connected' => 'Socially Connected',
-                                        'Got the resume through a common fried' => 'Got the resume through a common fried',
-                                        'Others' => 'Others',
+                                        'None' => __('enums.relationship.none'),
+                                        'Personally Known' => __('enums.relationship.personally_known'),
+                                        'Former Colleague' => __('enums.relationship.former_colleague'),
+                                        'Socially Connected' => __('enums.relationship.socially_connected'),
+                                        'Got the resume through a common fried' => __('enums.relationship.common_friend'),
+                                        'Others' => __('enums.relationship.others'),
                                     ]),
                                 Forms\Components\Select::make('KnownPeriod')
                                     ->options([
-                                        'None' => 'None',
-                                        'Less than a year',
-                                        '1-2 years' => '1-2 years',
-                                        '3-5 years' => '3-5 years',
-                                        '5+ years' => '5+ years',
+                                        'None' => __('enums.known_period.none'),
+                                        'Less than a year' => __('enums.known_period.less_than_year'),
+                                        '1-2 years' => __('enums.known_period.1_2_years'),
+                                        '3-5 years' => __('enums.known_period.3_5_years'),
+                                        '5+ years' => __('enums.known_period.5_plus_years'),
                                     ]),
                                 Forms\Components\Textarea::make('Notes')
                                     ->nullable(),

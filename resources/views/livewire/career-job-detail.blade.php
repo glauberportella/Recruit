@@ -24,10 +24,10 @@
                         <!-- Desktop sign in links -->
                         <ul class="cqho4 c392o cmh34 csqne c8c54">
                             <li>
-                                <a class="cxymg cvqf0 cqho4 crqt4 c38bd ckc7d csqne cr309 ciyzd" href="{{filament()->getPanel('candidate')->getLoginUrl()}}">Sign in</a>
+                                <a class="cxymg cvqf0 cqho4 crqt4 c38bd ckc7d csqne cr309 ciyzd" href="{{filament()->getPanel('candidate')->getLoginUrl()}}">{{ __('messages.sign_in') }}</a>
                             </li>
                             <li>
-                                <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getRegistrationUrl()}}">Sign up</a>
+                                <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getRegistrationUrl()}}">{{ __('messages.sign_up') }}</a>
                             </li>
                         </ul>
 
@@ -67,7 +67,7 @@
                                                         <path d="M6.3 15.7c-.1-.1-4.2-3.7-4.2-3.8C.7 10.7 0 8.9 0 7c0-3.9 3.1-7 7-7s7 3.1 7 7c0 1.9-.7 3.7-2.1 5-.1.1-4.1 3.7-4.2 3.8-.4.3-1 .3-1.4-.1Zm-2.7-5 3.4 3 3.4-3c1-1 1.6-2.2 1.6-3.6 0-2.8-2.2-5-5-5S2 4.2 2 7c0 1.4.6 2.7 1.6 3.7 0-.1 0-.1 0 0Z"></path>
                                                     </svg>
                                                     <span class="cza13 ckc7d">
-                                                        {{$jobDetails->RemoteJob === 1 ? 'Fully Remote' : 'On-site'}}
+                                                        {{$jobDetails->RemoteJob === 1 ? __('messages.fully_remote') : __('messages.on_site')}}
                                                     </span>
                                                 </li>
                                                 <li class="cqho4 csqne">
@@ -82,7 +82,7 @@
 
                                         <div class="cglzl c0spu c7764">
                                             <a class="ch5p0 comj7 c3fma cfkyn cv0zi cq3a6 csg05" href="{{route('career.job_apply', [$jobDetails->JobOpeningSystemID])}}">
-                                                Apply Now <span class="ciidb ci5s6 c8b8n cv4h1 chdfx ct9wm c6gnl">-&gt;</span>
+                                                {{ __('candidate.career.apply_now') }} <span class="ciidb ci5s6 c8b8n cv4h1 chdfx ct9wm c6gnl">-&gt;</span>
                                             </a>
                                         </div>
 
@@ -142,7 +142,7 @@
                                 <!-- Job description -->
                                 <div class="ctz8u">
                                     <div class="cnog5">
-                                        <a class="cvqf0 crqt4" href="{{route('career.landing_page')}}"><span class="c8b8n">&lt;-</span> All Jobs</a>
+                                        <a class="cvqf0 crqt4" href="{{route('career.landing_page')}}"><span class="c8b8n">&lt;-</span> {{ __('messages.all_jobs') }}</a>
                                     </div>
                                     <h1 class="c5zpx c9gkl c8hbn cn95v">{{$jobDetails->postingTitle}}</h1>
                                     <!-- Job description -->
@@ -156,19 +156,19 @@
                                             </div>
                                         </div>--}}
                                         <div>
-                                            <h3 class="c8tys c89yv chhg4 codx4">Job Description</h3>
+                                            <h3 class="c8tys c89yv chhg4 codx4">{{ __('messages.description') }}</h3>
                                             <div class="cdfls cttum">
                                                 {!! $jobDetails->JobDescription !!}
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 class="c8tys c89yv chhg4 codx4">Requirements</h3>
+                                            <h3 class="c8tys c89yv chhg4 codx4">{{ __('admin.job_openings.requirements') }}</h3>
                                             <div class="cdfls cttum cbjmj ckxyp ">
                                                 {!! $jobDetails->JobRequirement !!}
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 class="c8tys c89yv chhg4 codx4">Benefits</h3>
+                                            <h3 class="c8tys c89yv chhg4 codx4">{{ __('admin.job_openings.benefits') }}</h3>
                                             <div class="cdfls cttum cbjmj ckxyp">
                                                 {!! $jobDetails->JobBenefits !!}
                                             </div>

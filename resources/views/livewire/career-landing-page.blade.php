@@ -21,10 +21,10 @@
                         <!-- Desktop sign in links -->
                         <ul class="crp1m cyy4k cnk8m czlxp cp7rp">
                             <li>
-                                <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getLoginUrl()}}">Sign in</a>
+                                <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getLoginUrl()}}">{{ __('messages.sign_in') }}</a>
                             </li>
                             <li>
-                                <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getRegistrationUrl()}}">Sign up</a>
+                                <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getRegistrationUrl()}}">{{ __('messages.sign_up') }}</a>
                             </li>
                         </ul>
                     </nav>
@@ -39,7 +39,7 @@
                         <!-- Hero content -->
                         <div class="clxxf cnvur cgr2r">
                             <!-- Copy -->
-                            <h1 class="c80vv cmux8 c4q7l">Join with our team</h1>
+                            <h1 class="c80vv cmux8 c4q7l">{{ __('candidate.career.join_team') }}</h1>
                             <p class="cfnbb ckpvk clvg0">We know that finding a meaningful and rewarding job can be a
                                 long journey. Our goal is to make that process as easy as possible for you, and to
                                 create a work environment that's satisfying - one where you'll look forward to coming to
@@ -63,19 +63,19 @@
                                         <div class="cpsdf ckgol ciwnj cuiwd ccrxf ctokc">
 
                                             <div class="c5u32 ccs55 cgzf4 co4wt">
-                                                <button class="c9csv ckncn c0ndj c91mf">Clear</button>
+                                                <button class="c9csv ckncn c0ndj c91mf">{{ __('candidate.career.clear') }}</button>
                                             </div>
 
                                             <div class="cfzub cu1y1 cnvfb c2et9">
                                                 <div>
-                                                    <div class="cv7ca c9csv ct75g cax0a">Remote Only</div>
+                                                    <div class="cv7ca c9csv ct75g cax0a">{{ __('candidate.career.remote_only') }}</div>
                                                     <div class="crp1m czlxp" x-data="{ checked: false }">
                                                         <div class="c9jgf">
                                                             <input type="checkbox" id="remote-toggle" class="cqgiy"
                                                                    x-model="checked" wire:model.live="showRemote">
                                                             <label class="c0e8u" for="remote-toggle">
                                                                 <span class="crmga c8dh7" aria-hidden="true"></span>
-                                                                <span class="cqgiy">Remote Only</span>
+                                                                <span class="cqgiy">{{ __('candidate.career.remote_only') }}</span>
                                                             </label>
                                                         </div>
                                                         <div class="cdjzc c9csv cqaaz cucxo"
@@ -83,7 +83,7 @@
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <div class="cv7ca c9csv ct75g cax0a">Job Type</div>
+                                                    <div class="cv7ca c9csv ct75g cax0a">{{ __('candidate.career.job_type') }}</div>
                                                     <ul class="c89f3">
                                                         @forelse($jobTypes as $index => $value)
                                                             <li>
@@ -95,7 +95,7 @@
                                                         @empty
                                                             <li>
                                                                 <label class="crp1m czlxp">
-                                                                    <span class="cdjzc c9csv cqfq4">no available filter</span>
+                                                                    <span class="cdjzc c9csv cqfq4">{{ __('messages.no_available_filter') }}</span>
                                                                 </label>
                                                             </li>
                                                         @endforelse
@@ -115,7 +115,7 @@
 
                                 <!-- Job list -->
                                 <div class="c1id5 cehj8">
-                                    <h2 class="cjplb c4q7l cp2cr cqnva">Latest jobs</h2>
+                                    <h2 class="cjplb c4q7l cp2cr cqnva">{{ __('messages.latest_jobs') }}</h2>
                                     <!-- List container -->
                                     <div class="crp1m cj2th">
                                         <!-- Item -->
@@ -136,14 +136,14 @@
                                                                     <p class="cwu8g c00re cx250 ckpu6 csdzj c7x38 cobkt cesao crqt4 cdfls cdo22 chdfx ct9wm cebbr">💰 {{$jobs['Salary']}}</p>
                                                                     <p class="cwu8g c00re cx250 ckpu6 csdzj c7x38 cobkt cesao crqt4 cdfls cdo22 chdfx ct9wm cebbr">💼 {{$jobs['JobType']}}</p>
                                                                     <p class="cwu8g c00re cx250 ckpu6 csdzj c7x38 cobkt cesao crqt4 cdfls cdo22 chdfx ct9wm cebbr">
-                                                                        {{$jobs['RemoteJob'] === 1 ? '🌎 Remote' : '🏢 On-site'}}
+                                                                        {{$jobs['RemoteJob'] === 1 ? '🌎 ' . __('messages.remote') : '🏢 ' . __('messages.on_site')}}
                                                                         </p>
                                                                 </div>
                                                             </div>
                                                             <div class="csqne c2kp1 cqho4 cn13m ctc7o ckjlt">
                                                                 <div class="cguey czwdx">
                                                                     <a class="cmqi9 comj7 cr309 cebq5 c3fma cfkyn ch5p0 cq3a6" href="{{route('career.job_apply', [$jobs['JobOpeningSystemID']])}}">
-                                                                        Apply Now <span class="c6gnl c8b8n cv4h1 ci5s6 chdfx ct9wm ciidb"></span>
+                                                                        {{ __('candidate.career.apply_now') }} <span class="c6gnl c8b8n cv4h1 ci5s6 chdfx ct9wm ciidb"></span>
                                                                     </a>
                                                                 </div>
                                                                 <div class="ckc7d c551r cdfls cdts2">{{\Carbon\Carbon::createFromTimeStamp(strtotime($jobs['created_at']))->diffForHumans()}}</div>
@@ -153,7 +153,7 @@
                                                 </div>
                                             </div>
                                         @empty
-                                            <span>There is no open job available.</span>
+                                            <span>{{ __('messages.no_open_jobs') }}</span>
                                         @endforelse
                                     </div>
                                 </div>

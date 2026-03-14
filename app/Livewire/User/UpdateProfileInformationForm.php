@@ -85,9 +85,9 @@ class UpdateProfileInformationForm extends Component
     protected function profileInformationUpdated(): void
     {
         Notification::make()
-            ->title('Profile information updated')
+            ->title(__('candidate.profile.profile_updated'))
             ->success()
-            ->body('Your profile information has been updated successfully.')
+            ->body(__('candidate.profile.profile_updated_body'))
             ->send();
     }
 

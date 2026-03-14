@@ -69,14 +69,14 @@ class UserResource extends Resource
                 Forms\Components\Section::make()
                     ->schema([
                         Forms\Components\Placeholder::make('created_at')
-                            ->label('Created at')
+                            ->label(__('admin.users.created_at'))
                             ->content(fn (User $record): ?string => $record->created_at?->diffForHumans()),
 
                         Forms\Components\Placeholder::make('updated_at')
-                            ->label('Last modified at')
+                            ->label(__('admin.users.last_modified_at'))
                             ->content(fn (User $record): ?string => $record->updated_at?->diffForHumans()),
                         Forms\Components\Placeholder::make('joined_at')
-                            ->label('Joined at')
+                            ->label(__('admin.users.joined_at'))
                             ->content(fn (User $record): ?string => $record->joined_at?->diffForHumans()),
                     ])
                     ->columnSpan(['lg' => 1])
@@ -87,12 +87,12 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No other system user.')
+            ->emptyStateHeading(__('admin.users.no_other_user'))
             ->emptyStateIcon('heroicon-o-user-plus')
-            ->emptyStateDescription('Add new user to reflect here.')
+            ->emptyStateDescription(__('admin.users.add_new_user'))
             ->columns([
                 Tables\Columns\ImageColumn::make('profile_photo_path')
-                    ->label('Profile Photo')
+                    ->label(__('admin.users.profile_photo'))
                     ->defaultImageUrl(fn (Model $record) => $record->profile_photo_url)
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')
@@ -103,7 +103,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('email_verified_at')
                     ->boolean()
-                    ->label('Verified Email'),
+                    ->label(__('admin.users.verified_email')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -117,8 +117,8 @@ class UserResource extends Resource
                     ->action(function (Model $record) {
                         if ($record->id === auth()->id()) {
                             return Notification::make()
-                                ->title('Error!')
-                                ->body('You cannot delete your own profile.')
+                                ->title(__('messages.error'))
+                                ->body(__('admin.users.cannot_delete_own'))
                                 ->icon('heroicon-o-shield-exclamation')
                                 ->iconPosition(IconPosition::Before)
                                 ->danger()
@@ -135,7 +135,7 @@ class UserResource extends Resource
                     })
                     ->link()
                     ->iconSize(IconSize::Small)
-                    ->label('Impersonate')
+                    ->label(__('admin.users.impersonate'))
                     ->icon('fas-user-secret'),
             ]);
     }

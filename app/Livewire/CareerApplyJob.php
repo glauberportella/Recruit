@@ -55,7 +55,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
         if (empty($this->record)) {
             // redirect back as the job opening is closed or tampered id or not existing
             Notification::make()
-                ->title('Job Opening is already closed or doesn\'t exist.')
+                ->title(__('candidate.career.job_closed'))
                 ->icon('heroicon-o-x-circle')
                 ->iconColor('warning')
                 ->send();
@@ -105,14 +105,14 @@ class CareerApplyJob extends Component implements HasActions, HasForms
 
         if ($candidate && $job_candidates) {
             Notification::make()
-                ->title('Application submitted!')
+                ->title(__('candidate.career.application_submitted'))
                 ->success()
-                ->body('Thank you for submitting your application details.')
+                ->body(__('candidate.career.application_submitted_body'))
                 ->send();
             Notification::make()
-                ->title('Reminder!')
+                ->title(__('candidate.career.reminder'))
                 ->success()
-                ->body('Please always check your communication for our hiring party response.')
+                ->body(__('candidate.career.reminder_body'))
                 ->send();
             $this->redirectRoute('career.landing_page');
         }
@@ -125,7 +125,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
             ->statePath('data')
             ->schema([
                 Wizard::make([
-                    Wizard\Step::make('Application')
+                    Wizard\Step::make(__('candidate.application.step_application'))
                         ->icon('heroicon-o-user')
                         ->columns(2)
                         ->schema(array_merge($this->applicationStepWizard(),
@@ -133,7 +133,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                                 ->columns(1)
                                 ->schema($this->captchaField())]
                         )),
-                    Wizard\Step::make('Assessment')
+                    Wizard\Step::make(__('candidate.application.step_assessment'))
                         ->visible(false)
                         ->icon('heroicon-o-user')
                         ->columns(2)
@@ -155,22 +155,22 @@ class CareerApplyJob extends Component implements HasActions, HasForms
     {
         return
             [
-                Forms\Components\Section::make('Basic Information')
+                Forms\Components\Section::make(__('messages.basic_information'))
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('FirstName')
                             ->required()
-                            ->label('First Name'),
+                            ->label(__('messages.first_name')),
                         Forms\Components\TextInput::make('LastName')
                             ->required()
-                            ->label('Last Name'),
+                            ->label(__('messages.last_name')),
                         Forms\Components\TextInput::make('mobile')
                             ->required(),
                         Forms\Components\TextInput::make('Email')
                             ->required()
                             ->email(),
                     ]),
-                Forms\Components\Section::make('Address Information')
+                Forms\Components\Section::make(__('messages.address_information'))
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('Street'),
@@ -179,33 +179,33 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                         Forms\Components\TextInput::make('ZipCode'),
                         Forms\Components\TextInput::make('State'),
                     ]),
-                Forms\Components\Section::make('Professional Details')
+                Forms\Components\Section::make(__('candidate.application.professional_details'))
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('CurrentEmployer')
-                            ->label('Current Employer (Company Name)'),
+                            ->label(__('candidate.application.current_employer')),
                         Forms\Components\TextInput::make('CurrentJobTitle')
-                            ->label('Current Job Title'),
+                            ->label(__('candidate.application.current_job_title')),
                         Forms\Components\Select::make('experience')
                             ->options([
-                                '1year' => '1year',
-                                '2year' => '2 Years',
-                                '3year' => '3 Years',
-                                '4year' => '4 Years',
-                                '5year' => '5 Years',
-                                '6year' => '6 Years',
-                                '7year' => '7 Years',
-                                '8year' => '8 Years',
-                                '9year' => '9 Years',
-                                '10year+' => '10 Years & Above',
+                                '1year' => __('enums.experience_years.1year'),
+                                '2year' => __('enums.experience_years.2year'),
+                                '3year' => __('enums.experience_years.3year'),
+                                '4year' => __('enums.experience_years.4year'),
+                                '5year' => __('enums.experience_years.5year'),
+                                '6year' => __('enums.experience_years.6year'),
+                                '7year' => __('enums.experience_years.7year'),
+                                '8year' => __('enums.experience_years.8year'),
+                                '9year' => __('enums.experience_years.9year'),
+                                '10year+' => __('enums.experience_years.10year+'),
                             ])
-                            ->label('Experience'),
+                            ->label(__('candidate.application.experience')),
                     ]),
-                Forms\Components\Section::make('Educational Details')
+                Forms\Components\Section::make(__('candidate.application.educational_details'))
                     ->schema([
                         Forms\Components\Repeater::make('School')
                             ->label('')
-                            ->addActionLabel('+ Add Degree Information')
+                            ->addActionLabel(__('candidate.application.add_degree'))
                             ->schema([
                                 Forms\Components\TextInput::make('school_name')
                                     ->required(),
@@ -213,8 +213,8 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                                     ->required(),
                                 Forms\Components\Select::make('duration')
                                     ->options([
-                                        '4years' => '4 Years',
-                                        '5years' => '5 Years',
+                                        '4years' => __('enums.school_duration.4years'),
+                                        '5years' => __('enums.school_duration.5years'),
                                     ])
                                     ->required(),
                                 Forms\Components\Checkbox::make('pursuing')
@@ -223,11 +223,11 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                             ->deletable(true)
                             ->columns(4),
                     ]),
-                Forms\Components\Section::make('Experience Details')
+                Forms\Components\Section::make(__('candidate.application.experience_details'))
                     ->schema([
                         Forms\Components\Repeater::make('ExperienceDetails')
                             ->label('')
-                            ->addActionLabel('Add Experience Details')
+                            ->addActionLabel(__('candidate.application.add_experience'))
                             ->schema([
                                 Forms\Components\Checkbox::make('current')
                                     ->label('Current?')
@@ -251,7 +251,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                         'application/pdf',
                     ])
                     ->required()
-                    ->label('Resume'),
+                    ->label(__('candidate.application.resume')),
             ];
     }
 
@@ -280,7 +280,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                         ->rules(['captcha'])
                         ->required()
                         ->validationMessages([
-                            'captcha' => __('Captcha does not match the image'),
+                            'captcha' => __('candidate.career.captcha_mismatch'),
                         ]),
                 ];
             }

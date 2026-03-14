@@ -40,17 +40,17 @@ class JobOpeningsResource extends Resource
                 Forms\Components\Checkbox::make('RemoteJob')
                     ->inline(false)
                     ->default(false),
-                Forms\Components\Section::make('Description Information')
+                Forms\Components\Section::make(__('messages.description_information'))
                     ->id('job-opening-description-information')
                     ->icon('heroicon-o-briefcase')
-                    ->label('Description Information')
+                    ->label(__('messages.description_information'))
                     ->schema([
                         Forms\Components\RichEditor::make('JobDescription')
-                            ->label('Job Description'),
+                            ->label(__('admin.job_openings.job_description')),
                         Forms\Components\RichEditor::make('JobRequirement')
-                            ->label('Requirements'),
+                            ->label(__('admin.job_openings.requirements')),
                         Forms\Components\RichEditor::make('JobBenefits')
-                            ->label('Benefits'),
+                            ->label(__('admin.job_openings.benefits')),
                     ]),
             ]);
     }
@@ -61,16 +61,16 @@ class JobOpeningsResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('JobTitle')
                     ->searchable()
-                    ->label('Job Title'),
+                    ->label(__('candidate.portal.job_title')),
                 Tables\Columns\TextColumn::make('Salary')
-                    ->label('Salary'),
+                    ->label(__('messages.salary')),
                 Tables\Columns\IconColumn::make('RemoteJob')
                     ->searchable()
                     ->boolean(),
                 Tables\Columns\TextColumn::make('JobType')
-                    ->label('Type'),
+                    ->label(__('messages.type')),
                 Tables\Columns\TextColumn::make('JobDescription')
-                    ->label('Description')
+                    ->label(__('messages.description'))
                     ->limit(length: 50),
             ])
             ->filters([

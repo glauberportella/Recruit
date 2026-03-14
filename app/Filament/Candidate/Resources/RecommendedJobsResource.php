@@ -17,11 +17,26 @@ class RecommendedJobsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
 
-    protected static ?string $navigationLabel = 'Recommended Jobs';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'Recommended Job';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'Recommended Jobs';
+    protected static ?string $pluralModelLabel = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('candidate.portal.recommended_jobs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('candidate.portal.recommended_job');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('candidate.portal.recommended_jobs');
+    }
 
     protected static ?int $navigationSort = 4;
 
@@ -61,17 +76,17 @@ class RecommendedJobsResource extends Resource
             ->striped()
             ->columns([
                 Tables\Columns\TextColumn::make('jobOpening.postingTitle')
-                    ->label('Job Title')
+                    ->label(__('candidate.portal.job_title'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jobOpening.Salary')
-                    ->label('Salary'),
+                    ->label(__('messages.salary')),
                 Tables\Columns\IconColumn::make('jobOpening.RemoteJob')
-                    ->label('Remote')
+                    ->label(__('messages.remote'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('jobOpening.JobType')
-                    ->label('Type'),
+                    ->label(__('messages.type')),
                 Tables\Columns\TextColumn::make('overall_score')
-                    ->label('Match')
+                    ->label(__('candidate.portal.match'))
                     ->badge()
                     ->color(fn (CandidateMatchScore $record): string => match (true) {
                         $record->overall_score >= 80 => 'success',
@@ -82,20 +97,20 @@ class RecommendedJobsResource extends Resource
                     ->formatStateUsing(fn ($state) => number_format($state, 1) . '%')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('matched_at')
-                    ->label('Analyzed')
+                    ->label(__('candidate.portal.analyzed'))
                     ->since(),
             ])
             ->defaultSort('overall_score', 'desc')
             ->actions([
                 Tables\Actions\Action::make('view_match')
-                    ->label('Why this match?')
+                    ->label(__('candidate.portal.why_match'))
                     ->icon('heroicon-o-question-mark-circle')
-                    ->modalHeading('Match Details')
+                    ->modalHeading(__('candidate.portal.match_details'))
                     ->modalContent(fn (CandidateMatchScore $record) => view('filament.components.candidate-match-details', ['match' => $record]))
                     ->modalSubmitAction(false),
             ])
-            ->emptyStateHeading('No recommendations yet')
-            ->emptyStateDescription('Once your profile is analyzed, matching jobs will appear here.')
+            ->emptyStateHeading(__('candidate.portal.no_recommendations'))
+            ->emptyStateDescription(__('candidate.portal.no_recommendations_desc'))
             ->emptyStateIcon('heroicon-o-sparkles');
     }
 

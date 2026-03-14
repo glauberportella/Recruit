@@ -45,11 +45,11 @@ class CandidatesProfileResource extends Resource
     private static function standardSchoolInformationFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Degree Information')
+            Forms\Components\Section::make(__('admin.candidates.degree_info'))
                 ->schema([
                     Forms\Components\Repeater::make('School')
                         ->label('')
-                        ->addActionLabel('Add Degree Information')
+                        ->addActionLabel(__('admin.candidates.add_degree'))
                         ->schema([
                             Forms\Components\TextInput::make('school_name')
                                 ->required(),
@@ -57,8 +57,8 @@ class CandidatesProfileResource extends Resource
                                 ->required(),
                             Forms\Components\Select::make('duration')
                                 ->options([
-                                    '4years' => '4 Years',
-                                    '5years' => '5 Years',
+                                    '4years' => __('enums.school_duration.4years'),
+                                    '5years' => __('enums.school_duration.5years'),
                                 ])
                                 ->required(),
                             Forms\Components\Checkbox::make('pursuing')
@@ -79,40 +79,40 @@ class CandidatesProfileResource extends Resource
                 ->readOnly()
                 ->disabled()
                 ->visibleOn('view'),
-            Forms\Components\Section::make('Candidate Basic Information')
+            Forms\Components\Section::make(__('admin.candidates.basic_info'))
                 ->schema([
                     Forms\Components\TextInput::make('FirstName')
-                        ->label('First Name'),
+                        ->label(__('messages.first_name')),
                     Forms\Components\TextInput::make('LastName')
-                        ->label('Last Name'),
+                        ->label(__('messages.last_name')),
                     Forms\Components\TextInput::make('Mobile')
-                        ->label('Mobile')
+                        ->label(__('messages.mobile'))
                         ->tel(),
                     Forms\Components\TextInput::make('email')
                         ->required(),
                     Forms\Components\Select::make('ExperienceInYears')
-                        ->label('Experience In Years')
+                        ->label(__('admin.job_candidates.experience_years'))
                         ->options([
-                            '1year' => '1 Year',
-                            '2years' => '2 Years',
-                            '3years' => '3 Years',
-                            '4years' => '4 Years',
-                            '5years+' => '5 Years & Above',
+                            '1year' => __('enums.experience_years.1year'),
+                            '2years' => __('enums.experience_years.2years'),
+                            '3years' => __('enums.experience_years.3years'),
+                            '4years' => __('enums.experience_years.4years'),
+                            '5years+' => __('enums.experience_years.5years_plus'),
                         ]),
                     Forms\Components\TextInput::make('ExpectedSalary')
                         ->mask(RawJs::make(<<<'JS'
                                 $money($input, '.',',')
                                 JS))
-                        ->label('Expected Salary'),
+                        ->label(__('admin.job_candidates.expected_salary')),
                     Forms\Components\Select::make('HighestQualificationHeld')
                         ->options([
-                            'Secondary/High School' => 'Secondary/High School',
-                            'Associates Degree' => 'Associates Degree',
-                            'Bachelors Degree' => 'Bachelors Degree',
-                            'Masters Degree' => 'Masters Degree',
-                            'Doctorate Degree' => 'Doctorate Degree',
+                            'Secondary/High School' => __('enums.qualification.secondary'),
+                            'Associates Degree' => __('enums.qualification.associates'),
+                            'Bachelors Degree' => __('enums.qualification.bachelors'),
+                            'Masters Degree' => __('enums.qualification.masters'),
+                            'Doctorate Degree' => __('enums.qualification.doctorate'),
                         ])
-                        ->label('Highest Qualification Held'),
+                        ->label(__('admin.job_candidates.highest_qualification')),
                 ])->columns(2),
 
         ];
@@ -122,36 +122,36 @@ class CandidatesProfileResource extends Resource
     public static function standardSkillSetFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Skill Set Information')
+            Forms\Components\Section::make(__('admin.candidates.skill_set_info'))
                 ->schema([
                     Forms\Components\Repeater::make('SkillSet')
                         ->label('')
-                        ->addActionLabel('Add Another Skill Set')
+                        ->addActionLabel(__('admin.candidates.add_skill_set'))
                         ->columns(4)
                         ->schema([
                             Forms\Components\TextInput::make('skill')
-                                ->label('Skill'),
+                                ->label(__('admin.candidates.skill')),
                             Forms\Components\Select::make('proficiency')
                                 ->options([
-                                    'Master' => 'Master',
-                                    'Intermediate' => 'Intermediate',
-                                    'Beginner' => 'Beginner',
+                                    'Master' => __('enums.proficiency.master'),
+                                    'Intermediate' => __('enums.proficiency.intermediate'),
+                                    'Beginner' => __('enums.proficiency.beginner'),
                                 ])
-                                ->label('Proficiency'),
+                                ->label(__('admin.candidates.proficiency')),
                             Forms\Components\Select::make('experience')
                                 ->options([
-                                    '1year' => '1year',
-                                    '2year' => '2 Years',
-                                    '3year' => '3 Years',
-                                    '4year' => '4 Years',
-                                    '5year' => '5 Years',
-                                    '6year' => '6 Years',
-                                    '7year' => '7 Years',
-                                    '8year' => '8 Years',
-                                    '9year' => '9 Years',
-                                    '10year+' => '10 Years & Above',
+                                    '1year' => __('enums.experience_years.1year'),
+                                    '2year' => __('enums.experience_years.2years'),
+                                    '3year' => __('enums.experience_years.3years'),
+                                    '4year' => __('enums.experience_years.4years'),
+                                    '5year' => __('enums.experience_years.5years'),
+                                    '6year' => __('enums.experience_years.6years'),
+                                    '7year' => __('enums.experience_years.7years'),
+                                    '8year' => __('enums.experience_years.8years'),
+                                    '9year' => __('enums.experience_years.9years'),
+                                    '10year+' => __('enums.experience_years.10years_plus'),
                                 ])
-                                ->label('Experience'),
+                                ->label(__('admin.candidates.experience')),
                             Forms\Components\Select::make('last_used')
                                 ->options(function () {
                                     $lastUsedOptions = [];
@@ -165,7 +165,7 @@ class CandidatesProfileResource extends Resource
 
                                     return $lastUsedOptions;
                                 })
-                                ->label('Last Used'),
+                                ->label(__('admin.candidates.last_used')),
 
                         ]),
                 ]),
@@ -177,14 +177,14 @@ class CandidatesProfileResource extends Resource
     public static function standardCurrentJobInformationFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Current Job Information')
+            Forms\Components\Section::make(__('admin.candidates.current_job_info'))
                 ->schema([
                     Forms\Components\TextInput::make('CurrentEmployer')
-                        ->label('Current Employer (Company Name)'),
+                        ->label(__('admin.job_candidates.current_employer')),
                     Forms\Components\TextInput::make('CurrentJobTitle')
-                        ->label('Current Job Title'),
+                        ->label(__('admin.job_candidates.current_job_title')),
                     Forms\Components\TextInput::make('CurrentSalary')
-                        ->label('Current Salary')
+                        ->label(__('admin.job_candidates.current_salary'))
                         ->mask(RawJs::make(<<<'JS'
                                 $money($input, '.',',')
                                 JS)),
@@ -195,7 +195,7 @@ class CandidatesProfileResource extends Resource
     public static function standardAddressInformationFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Address Information')
+            Forms\Components\Section::make(__('admin.candidates.address_info'))
                 ->schema([
                     Forms\Components\TextInput::make('Street'),
                     Forms\Components\TextInput::make('City'),
@@ -209,14 +209,14 @@ class CandidatesProfileResource extends Resource
     public static function standardCandidatesExperienceFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Experience Information')
+            Forms\Components\Section::make(__('admin.candidates.experience_info'))
                 ->schema([
                     Forms\Components\Repeater::make('ExperienceDetails')
                         ->label('')
-                        ->addActionLabel('Add Experience Details')
+                        ->addActionLabel(__('admin.candidates.add_experience'))
                         ->schema([
                             Forms\Components\Checkbox::make('current')
-                                ->label('Current?')
+                                ->label(__('admin.candidates.current_question'))
                                 ->inline(false),
                             Forms\Components\TextInput::make('company_name'),
                             Forms\Components\TextInput::make('duration'),
@@ -234,7 +234,7 @@ class CandidatesProfileResource extends Resource
     public static function standardAdditionalInformationFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Additional Information')
+            Forms\Components\Section::make(__('messages.additional_information'))
                 ->schema([
                     Forms\Components\Textarea::make('AdditionalInformation')
                         ->label(''),
@@ -254,20 +254,20 @@ class CandidatesProfileResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('ai_suggest_jobs')
-                    ->label('AI Suggest Jobs')
+                    ->label(__('admin.candidates.ai_suggest_jobs'))
                     ->icon('heroicon-o-cpu-chip')
                     ->color('info')
                     ->requiresConfirmation()
-                    ->modalHeading('AI Job Suggestions')
-                    ->modalDescription('This will analyze all open job openings and rank them by compatibility with this candidate.')
+                    ->modalHeading(__('admin.candidates.ai_job_suggestions'))
+                    ->modalDescription(__('admin.candidates.ai_job_suggestions_desc'))
                     ->action(function (Candidates $record) {
                         ProcessCandidateJobSuggestions::dispatch($record->id);
 
-                        Notification::make()->title('AI Match Queued')->success()
-                            ->body('Job suggestion analysis has been queued for this candidate.')->send();
+                        Notification::make()->title(__('admin.candidates.ai_match_queued'))->success()
+                            ->body(__('admin.candidates.ai_match_queued_body'))->send();
                     }),
                 Tables\Actions\Action::make('view_suggested_jobs')
-                    ->label('Suggested Jobs')
+                    ->label(__('admin.candidates.suggested_jobs'))
                     ->icon('heroicon-o-chart-bar')
                     ->color('gray')
                     ->url(fn (Candidates $record) => CandidatesProfileResource::getUrl('ai-suggested-jobs', ['record' => $record]))

@@ -5,16 +5,16 @@
             <div class="text-3xl font-bold @if($match->overall_score >= 80) text-green-600 @elseif($match->overall_score >= 60) text-blue-600 @elseif($match->overall_score >= 40) text-yellow-600 @else text-red-600 @endif">
                 {{ number_format($match->overall_score, 1) }}%
             </div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">Compatibility Score</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.ai.compatibility_score') }}</div>
         </div>
 
         {{-- Score Breakdown --}}
         <div class="grid grid-cols-2 gap-3 mt-4">
             @foreach([
-                'Skills Match' => $match->skills_score,
-                'Experience Fit' => $match->experience_score,
-                'Education Match' => $match->education_score,
-                'Salary Alignment' => $match->salary_score,
+                __('messages.ai.skills_match') => $match->skills_score,
+                __('messages.ai.experience_fit') => $match->experience_score,
+                __('messages.ai.education_match') => $match->education_score,
+                __('messages.ai.salary_alignment') => $match->salary_score,
             ] as $label => $score)
                 <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                     <div class="text-xs text-gray-500 dark:text-gray-400">{{ $label }}</div>
@@ -29,7 +29,7 @@
         {{-- Skill Gap --}}
         @if(!empty($match->skill_gap_analysis))
             <div class="mt-4">
-                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Your Skills vs Requirements</h4>
+                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.ai.skills_vs_requirements') }}</h4>
                 <div class="space-y-1">
                     @foreach($match->skill_gap_analysis as $gap)
                         <div class="flex items-center gap-2 text-sm">
@@ -56,11 +56,11 @@
         @endif
 
         <div class="text-xs text-gray-400 mt-3 text-center">
-            Analysis from: {{ $match->matched_at->diffForHumans() }}
+            {{ __('messages.ai.analysis_from') }} {{ $match->matched_at->diffForHumans() }}
         </div>
     @else
         <div class="text-center py-8">
-            <p class="text-gray-500 dark:text-gray-400">No match details available.</p>
+            <p class="text-gray-500 dark:text-gray-400">{{ __('messages.ai.no_match_details') }}</p>
         </div>
     @endif
 </div>

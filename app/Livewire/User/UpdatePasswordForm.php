@@ -52,7 +52,7 @@ class UpdatePasswordForm extends Component
             'current_password' => ['required', 'string', 'current_password:web'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
-            'current_password.current_password' => 'The provided password does not match your current password.',
+            'current_password.current_password' => __('candidate.profile.password_mismatch'),
         ])->validateWithBag('updatePassword');
 
         $user->forceFill([
@@ -71,9 +71,9 @@ class UpdatePasswordForm extends Component
     public function passwordUpdated(): void
     {
         Notification::make()
-            ->title('Password updated')
+            ->title(__('candidate.profile.password_updated'))
             ->success()
-            ->body('Your password has been updated successfully.')
+            ->body(__('candidate.profile.password_updated_body'))
             ->send();
     }
 

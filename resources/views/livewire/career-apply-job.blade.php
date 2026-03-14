@@ -25,10 +25,10 @@
                             <!-- Desktop sign in links -->
                             <ul class="cqho4 c392o cmh34 csqne c8c54">
                                 <li>
-                                    <a class="cxymg cvqf0 cqho4 crqt4 c38bd ckc7d csqne cr309 ciyzd" href="{{filament()->getPanel('candidate')->getLoginUrl()}}">Sign in</a>
+                                    <a class="cxymg cvqf0 cqho4 crqt4 c38bd ckc7d csqne cr309 ciyzd" href="{{filament()->getPanel('candidate')->getLoginUrl()}}">{{ __('messages.sign_in') }}</a>
                                 </li>
                                 <li>
-                                    <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getRegistrationUrl()}}">Sign up</a>
+                                    <a class="crp1m czlxp chrwa cxa4q c9csv ckncn c0ndj c91mf chlg0" href="{{filament()->getPanel('candidate')->getRegistrationUrl()}}">{{ __('messages.sign_up') }}</a>
                                 </li>
                             </ul>
 
@@ -51,9 +51,9 @@
                                     <!-- Job description -->
                                     <div class="ctz8u">
                                         <div class="cnog5">
-                                            <a class="cvqf0 crqt4" href="{{route('career.landing_page')}}"><span class="c8b8n">&lt;-</span> All Jobs</a>
+                                            <a class="cvqf0 crqt4" href="{{route('career.landing_page')}}"><span class="c8b8n">&lt;-</span> {{ __('messages.all_jobs') }}</a>
                                         </div>
-                                        <h5 class="c5zpx c9gkl cn95v">Applying for {{$jobDetail?->postingTitle}}</h5>
+                                        <h5 class="c5zpx c9gkl cn95v">{{ __('messages.applying_for', ['job' => $jobDetail?->postingTitle]) }}</h5>
                                         <!-- Job description -->
                                         <div class="c5rk9 coxki">
                                             <form wire:submit.prevent="create">

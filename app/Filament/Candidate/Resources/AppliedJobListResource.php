@@ -18,11 +18,26 @@ class AppliedJobListResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'My Applied Jobs';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $modelLabel = 'Applied Job';
+    protected static ?string $modelLabel = null;
 
-    protected static ?string $pluralModelLabel = 'Applied Jobs';
+    protected static ?string $pluralModelLabel = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('candidate.portal.my_applied_jobs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('candidate.portal.applied_job');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('candidate.portal.applied_jobs');
+    }
 
     protected static ?int $navigationSort = 2;
 
@@ -52,16 +67,16 @@ class AppliedJobListResource extends Resource
             ->striped()
             ->columns([
                 Tables\Columns\TextColumn::make('JobCandidateId')
-                    ->label('Job Candidate Number'),
+                    ->label(__('candidate.portal.job_candidate_number')),
                 Tables\Columns\TextColumn::make('job.postingTitle')
-                    ->label('Job Title'),
+                    ->label(__('candidate.portal.job_title')),
                 Tables\Columns\BooleanColumn::make('job.RemoteJob')
-                    ->label('Remote Job'),
+                    ->label(__('candidate.portal.remote_job')),
                 Tables\Columns\TextColumn::make('job.Salary')
                     ->toggleable()
-                    ->label('Salary'),
+                    ->label(__('messages.salary')),
                 Tables\Columns\TextColumn::make('CandidateStatus')
-                    ->label('Application Status'),
+                    ->label(__('candidate.portal.application_status')),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -70,8 +85,8 @@ class AppliedJobListResource extends Resource
             ])
             ->actions([
             ])
-            ->emptyStateHeading('No Job Applied.')
-            ->emptyStateDescription('Once you applied a job, it will appear here.')
+            ->emptyStateHeading(__('candidate.portal.no_job_applied'))
+            ->emptyStateDescription(__('candidate.portal.no_job_applied_desc'))
             ->emptyStateIcon('heroicon-o-briefcase');
     }
 

@@ -50,7 +50,7 @@ class JobOpeningsResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Job Opening Information')
+                Section::make(__('admin.job_openings.info_section'))
                     ->icon('heroicon-o-briefcase')
                     ->schema([
                         TextInput::make('postingTitle')
@@ -63,11 +63,11 @@ class JobOpeningsResource extends Resource
                             ->maxLength(225)
                             ->required(),
                         TextInput::make('JobOpeningSystemID')
-                            ->label('Job Opening Unique Key ID')
+                            ->label(__('admin.job_openings.unique_key_id'))
                             ->readOnly()
                             ->hiddenOn('create'),
                         DatePicker::make('TargetDate')
-                            ->label('Target Date')
+                            ->label(__('admin.job_openings.target_date'))
                             ->format('d/m/Y')
                             ->native(false)
                             ->displayFormat('m/d/Y')
@@ -87,7 +87,7 @@ class JobOpeningsResource extends Resource
                         Select::make('AssignedRecruiters')
                             ->options(User::all()->pluck('name', 'id')),
                         DatePicker::make('DateOpened')
-                            ->label('Date Opened')
+                            ->label(__('admin.job_openings.date_opened'))
                             ->format('d/m/Y')
                             ->native(false)
                             ->displayFormat('m/d/Y')
@@ -106,7 +106,7 @@ class JobOpeningsResource extends Resource
                             ->inline(false)
                             ->default(false),
                     ])->columns(2),
-                Section::make('Address Information')
+                Section::make(__('messages.address_information'))
                     ->id('job-opening-address-information-section')
                     ->icon('heroicon-o-map')
                     ->schema([
@@ -115,43 +115,43 @@ class JobOpeningsResource extends Resource
                         TextInput::make('Country')
                             ->required(),
                         TextInput::make('State')
-                            ->label('State/Province')
+                            ->label(__('messages.state'))
                             ->required(),
                         TextInput::make('ZipCode')
-                            ->label('Zip/Postal Code')
+                            ->label(__('messages.zip_code'))
                             ->required(),
                     ])->columns(2),
-                Section::make('Description Information')
+                Section::make(__('messages.description_information'))
                     ->id('job-opening-description-information')
                     ->icon('heroicon-o-briefcase')
-                    ->label('Description Information')
+                    ->label(__('messages.description_information'))
                     ->schema([
                         RichEditor::make('JobDescription')
-                            ->label('Job Description')
+                            ->label(__('admin.job_openings.job_description'))
                             ->required(),
                         RichEditor::make('JobRequirement')
-                            ->label('Requirements')
+                            ->label(__('admin.job_openings.requirements'))
                             ->required(),
                         RichEditor::make('JobBenefits')
-                            ->label('Benefits')
+                            ->label(__('admin.job_openings.benefits'))
                             ->required(),
                         RichEditor::make('AdditionalNotes')
-                            ->hintIcon('heroicon-o-information-circle', tooltip: 'This field will display in the career job portal')
-                            ->label('Additional Notes')
+                            ->hintIcon('heroicon-o-information-circle', tooltip: __('admin.job_openings.additional_notes_hint'))
+                            ->label(__('admin.job_openings.additional_notes'))
                             ->nullable(),
                     ])->columns(1),
-                Section::make('System Information')
+                Section::make(__('messages.system_information'))
                     ->hiddenOn(['create', 'edit'])
                     ->id('job-opening-system-info')
                     ->icon('heroicon-o-computer-desktop')
-                    ->label('System Information')
+                    ->label(__('messages.system_information'))
                     ->schema([
                         TextInput::make('CreatedBy'),
                         TextInput::make('ModifiedBy'),
                         TextInput::make('created_at')
-                            ->label('Created Date'),
+                            ->label(__('messages.created_at')),
                         TextInput::make('updated_at')
-                            ->label('Last Modified Date'),
+                            ->label(__('messages.updated_at')),
                     ])->columns(2),
             ]);
     }
@@ -161,17 +161,17 @@ class JobOpeningsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('postingTitle')
-                    ->label('Job Title Name'),
+                    ->label(__('admin.job_openings.job_title_name')),
                 TextColumn::make('NumberOfPosition')
-                    ->label('# of Vacancy'),
+                    ->label(__('admin.job_openings.num_vacancy')),
                 TextColumn::make('TargetDate')
-                    ->label('Target Date'),
+                    ->label(__('admin.job_openings.target_date')),
                 TextColumn::make('DateOpened')
-                    ->label('Date Opened'),
+                    ->label(__('admin.job_openings.date_opened')),
                 TextColumn::make('JobType')
-                    ->label('Job Type'),
+                    ->label(__('admin.job_openings.job_type')),
                 IconColumn::make('RemoteJob')
-                    ->label('Remote')
+                    ->label(__('messages.remote'))
                     ->boolean()
                     ->trueIcon('heroicon-o-check-badge'),
             ])->emptyStateActions([
@@ -180,17 +180,17 @@ class JobOpeningsResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('ai_match_candidates')
-                    ->label('AI Match')
+                    ->label(__('admin.job_openings.ai_match'))
                     ->icon('heroicon-o-cpu-chip')
                     ->color('info')
                     ->requiresConfirmation()
-                    ->modalHeading('Run AI Match for All Candidates')
-                    ->modalDescription('This will queue AI matching analysis of all candidates against this job opening.')
+                    ->modalHeading(__('admin.job_openings.run_ai_match_all'))
+                    ->modalDescription(__('admin.job_openings.ai_match_modal_desc'))
                     ->action(function (JobOpenings $record) {
                         ProcessCandidateMatching::dispatch($record->id);
 
-                        Notification::make()->title('AI Match Queued')->success()
-                            ->body('Matching analysis for all candidates has been queued.')->send();
+                        Notification::make()->title(__('admin.job_openings.ai_match_queued'))->success()
+                            ->body(__('admin.job_openings.ai_match_queued_body'))->send();
                     }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -199,9 +199,9 @@ class JobOpeningsResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('unpublished')
-                        ->tooltip('Unpublished this opening job in the career page')
+                        ->tooltip(__('admin.job_openings.unpublished_tooltip'))
                         ->icon('heroicon-o-arrow-uturn-left')
-                        ->label('Unpublished')
+                        ->label(__('admin.job_openings.unpublished'))
                         ->requiresConfirmation()
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records) {
@@ -210,14 +210,14 @@ class JobOpeningsResource extends Resource
                                 $record->save();
                             }
                             Notification::make()
-                                ->body('Job Opening has been unpublished.')
+                                ->body(__('admin.job_openings.unpublished_body'))
                                 ->success()
                                 ->send();
                         }),
                     Tables\Actions\BulkAction::make('published')
-                        ->label('Publish')
+                        ->label(__('admin.job_openings.publish'))
                         ->icon('heroicon-o-arrow-uturn-up')
-                        ->tooltip('Publish this opening job to the career page')
+                        ->tooltip(__('admin.job_openings.publish_tooltip'))
                         ->requiresConfirmation()
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records) {
@@ -226,15 +226,15 @@ class JobOpeningsResource extends Resource
                                 $record->save();
                             }
                             Notification::make()
-                                ->body('Job Opening has been published.')
+                                ->body(__('admin.job_openings.published_body'))
                                 ->success()
                                 ->send();
                         }),
                 ])
                     ->icon('heroicon-o-globe-alt')
-                    ->label('Publish/Unpublished'),
+                    ->label(__('admin.job_openings.publish_unpublish')),
                 Tables\Actions\BulkAction::make('change_status')
-                    ->label('Update Status')
+                    ->label(__('admin.job_openings.update_status'))
                     ->icon('heroicon-o-pencil-square')
                     ->requiresConfirmation()
                     ->deselectRecordsAfterCompletion()
@@ -250,7 +250,7 @@ class JobOpeningsResource extends Resource
                             $record->save();
                         }
                         Notification::make()
-                            ->body("Job Opening status has been successfully updated to {$data['Status']}.")
+                            ->body(__('admin.job_openings.status_updated_body', ['status' => $data['Status']]))
                             ->success()
                             ->send();
                     }),

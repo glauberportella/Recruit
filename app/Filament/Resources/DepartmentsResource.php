@@ -27,7 +27,7 @@ class DepartmentsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Department Information')
+                Forms\Components\Section::make(__('admin.departments.info_section'))
                     ->id('department-information')
                     ->icon('lucide-building-2')
                     ->schema([
@@ -37,18 +37,18 @@ class DepartmentsResource extends Resource
                             ->options(Departments::all()->pluck('DepartmentName', 'id'))
                             ->nullable(),
                     ]),
-                Forms\Components\Section::make('System Information')
+                Forms\Components\Section::make(__('messages.system_information'))
                     ->hiddenOn('create')
                     ->id('job-opening-system-info')
                     ->icon('heroicon-o-computer-desktop')
-                    ->label('System Information')
+                    ->label(__('messages.system_information'))
                     ->schema([
                         Forms\Components\TextInput::make('CreatedBy'),
                         Forms\Components\TextInput::make('ModifiedBy'),
                         Forms\Components\DateTimePicker::make('created_at')
-                            ->label('Created Date'),
+                            ->label(__('messages.created_at')),
                         Forms\Components\DateTimePicker::make('updated_at')
-                            ->label('Last Modified Date'),
+                            ->label(__('messages.updated_at')),
                     ])->columns(2),
 
             ]);
@@ -59,9 +59,9 @@ class DepartmentsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('DepartmentName')
-                    ->label('Department Name'),
+                    ->label(__('admin.departments.department_name')),
                 Tables\Columns\TextColumn::make('creator.name')
-                    ->label('Parent Department'),
+                    ->label(__('admin.departments.parent_department')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

@@ -1,10 +1,10 @@
 <x-grid-section md="2">
     <x-slot name="title">
-        Update Profile Information
+        {{ __('messages.update_profile') }}
     </x-slot>
 
     <x-slot name="description">
-        Update your account's profile information and email address.
+        {{ __('messages.update_profile_desc') }}
     </x-slot>
 
     <x-filament::section>
@@ -25,7 +25,7 @@
                     " />
 
                 <x-filament-forms::field-wrapper.label for="photo">
-                    Photo
+                    {{ __('messages.photo') }}
                 </x-filament-forms::field-wrapper.label>
 
                 <!-- Current Profile Photo -->
@@ -39,12 +39,12 @@
                 </template>
 
                 <x-filament::button size="sm" x-on:click.prevent="$refs.photo.click()">
-                    New Photo
+                    {{ __('messages.new_photo') }}
                 </x-filament::button>
 
                 @if ($this->user->profile_photo_path)
                     <x-filament::button size="sm" color="danger" wire:click="deleteProfilePhoto">
-                        Remove Photo
+                        {{ __('messages.remove_photo') }}
                     </x-filament::button>
                 @endif
 
@@ -52,14 +52,14 @@
             </div>
 
             <!-- Name -->
-            <x-filament-forms::field-wrapper id="name" statePath="name" required="required" label="Name">
+            <x-filament-forms::field-wrapper id="name" statePath="name" required="required" label="{{ __('messages.name') }}">
                 <x-filament::input.wrapper class="overflow-hidden">
                     <x-filament::input id="name" type="text" maxLength="255" required="required" wire:model="state.name" autocomplete="name" />
                 </x-filament::input.wrapper>
             </x-filament-forms::field-wrapper>
 
             <!-- Email -->
-            <x-filament-forms::field-wrapper id="email" statePath="email" required="required" label="Email">
+            <x-filament-forms::field-wrapper id="email" statePath="email" required="required" label="{{ __('messages.email') }}">
                 <x-filament::input.wrapper class="overflow-hidden">
                     <x-filament::input id="email" type="email" wire:model="state.email" maxLength="255" required="required" autocomplete="username" />
                 </x-filament::input.wrapper>
@@ -67,8 +67,8 @@
 
             <div class="text-left">
                 <x-filament::button type="submit" wire:target="photo">
-                    <span wire:loading.remove wire:target="updateProfileInformation">Update</span>
-                    <span wire:loading wire:target="updateProfileInformation">Updating...</span>
+                    <span wire:loading.remove wire:target="updateProfileInformation">{{ __('messages.update') }}</span>
+                    <span wire:loading wire:target="updateProfileInformation">{{ __('messages.updating') }}</span>
                 </x-filament::button>
             </div>
         </x-filament-panels::form>

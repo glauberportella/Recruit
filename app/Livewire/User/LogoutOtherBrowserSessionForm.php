@@ -49,7 +49,7 @@ class LogoutOtherBrowserSessionForm extends Component
 
         if (! Hash::check($this->password, Auth::user()->password)) {
             throw ValidationException::withMessages([
-                'password' => ['The password you entered is invalid.'],
+                'password' => [__('candidate.profile.invalid_password')],
             ]);
         }
 
@@ -132,9 +132,9 @@ class LogoutOtherBrowserSessionForm extends Component
     public function browserSessionsTerminated(): void
     {
         Notification::make()
-            ->title('Browser sessions terminated')
+            ->title(__('candidate.profile.sessions_terminated'))
             ->success()
-            ->body('Your account has been logged out of other browser sessions for security purposes.')
+            ->body(__('candidate.profile.sessions_terminated_body'))
             ->send();
     }
 

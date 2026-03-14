@@ -22,12 +22,12 @@ class CareerJobDetail extends Component
 
         if (session()->has('password_hash_candidate_web')) {
             Notification::make()
-                ->body('Login to your candidate portal for applying to experience 5sec job apply.')
+                ->body(__('candidate.career.portal_login_body'))
                 ->icon('heroicon-o-exclamation-triangle')
                 ->actions([
                     Action::make('view')
                         ->color('success')
-                        ->label('Redirect to my Portal')
+                        ->label(__('candidate.career.redirect_portal'))
                         ->url(filament()->getPanel('candidate')->getLoginUrl())
                         ->button(),
                 ])
@@ -42,7 +42,7 @@ class CareerJobDetail extends Component
         if (! static::$jobDetails) {
             // redirect back as the job opening is closed or tampered id or not existing
             Notification::make()
-                ->title('Job Opening is already closed or doesn\'t exist.')
+                ->title(__('candidate.career.job_closed'))
                 ->icon('heroicon-o-x-circle')
                 ->iconColor('warning')
                 ->send();
@@ -53,7 +53,7 @@ class CareerJobDetail extends Component
     public function copiedShareLink(): void
     {
         Notification::make()
-            ->title('Link Copied')
+            ->title(__('messages.link_copied'))
             ->icon('heroicon-o-check-badge')
             ->iconColor('success')
             ->send();

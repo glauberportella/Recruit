@@ -21,7 +21,12 @@ class Jitsi extends Page
 
     protected ?string $heading = '';
 
-    protected static ?string $navigationLabel = 'Online Interviews (Jitsi)';
+    protected static ?string $navigationLabel = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.settings.jitsi_label');
+    }
 
     public array $state = [];
 
@@ -60,9 +65,9 @@ class Jitsi extends Page
         $settings->save();
 
         Notification::make()
-            ->title('Jitsi settings updated')
+            ->title(__('admin.settings.jitsi_updated'))
             ->success()
-            ->body('Your Jitsi Meet configuration has been saved successfully.')
+            ->body(__('admin.settings.jitsi_updated_body'))
             ->send();
     }
 }

@@ -21,7 +21,12 @@ class Company extends Page
 
     protected ?string $heading = '';
 
-    protected static ?string $navigationLabel = 'Company Details';
+    protected static ?string $navigationLabel = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.settings.company_details');
+    }
 
     /**
      * The component's state.
@@ -70,9 +75,9 @@ class Company extends Page
         $setting->save();
 
         Notification::make()
-            ->title('Company information updated')
+            ->title(__('admin.settings.company_updated'))
             ->success()
-            ->body('Your Company information has been updated successfully.')
+            ->body(__('admin.settings.company_updated_body'))
             ->send();
     }
 }

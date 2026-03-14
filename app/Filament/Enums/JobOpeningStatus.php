@@ -15,6 +15,6 @@ enum JobOpeningStatus: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->value;
+        return __('enums.job_opening_status.' . $this->value);
     }
 }

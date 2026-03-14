@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $interview->title }} - Interview Meeting</title>
+    <title>{{ $interview->title }} - {{ __('messages.interview.meeting_room') }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #fff; }
@@ -54,9 +54,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color: #38a169;">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <h2>Meeting Ended</h2>
-        <p>The interview meeting has been concluded. You can close this window.</p>
-        <a href="javascript:window.close()" class="btn btn-primary">Close Window</a>
+        <h2>{{ __('messages.interview.meeting_ended') }}</h2>
+        <p>{{ __('messages.interview.meeting_ended_body') }}</p>
+        <a href="javascript:window.close()" class="btn btn-primary">{{ __('messages.close_window') }}</a>
     </div>
 
     <script src="https://meet.jit.si/external_api.js"></script>

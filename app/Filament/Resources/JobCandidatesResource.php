@@ -51,21 +51,21 @@ class JobCandidatesResource extends Resource
     public static function candidatePipelineFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Pipeline')
+            Forms\Components\Section::make(__('admin.job_candidates.pipeline'))
                 ->schema([
                     Forms\Components\Select::make('JobId')
-                        ->label('Job Associated')
+                        ->label(__('admin.job_candidates.job_associated'))
                         ->options(JobOpenings::all()->pluck('JobTitle', 'id'))
                         ->required(),
                     Forms\Components\Select::make('CandidateStatus')
-                        ->label('Candidate Status')
+                        ->label(__('admin.job_candidates.candidate_status'))
                         ->options(JobCandidateStatus::class)
                         ->required(),
                     Forms\Components\TextInput::make('CandidateSource')
                         ->nullable('')
                         ->default('web'),
                     Forms\Components\Select::make('CandidateOwner')
-                        ->label('Candidate Owner')
+                        ->label(__('admin.job_candidates.candidate_owner'))
                         ->options(User::all()->pluck('name', 'id'))
                         ->nullable(),
                 ])->columns(2),
@@ -79,7 +79,7 @@ class JobCandidatesResource extends Resource
                 ->visibleOn('view')
                 ->readOnly()
                 ->disabled(),
-            Forms\Components\Section::make('Candidate Basic Information')
+            Forms\Components\Section::make(__('admin.job_candidates.basic_info'))
                 ->schema([
                     Forms\Components\Select::make('candidate')
                         ->options(Candidates::all()->pluck('full_name', 'id'))
@@ -90,25 +90,25 @@ class JobCandidatesResource extends Resource
                         ->required()
                         ->email(),
                     Forms\Components\Select::make('ExperienceInYears')
-                        ->label('Experience In Years')
+                        ->label(__('admin.job_candidates.experience_years'))
                         ->options([
-                            '1year' => '1 Year',
-                            '2years' => '2 Years',
-                            '3years' => '3 Years',
-                            '4years' => '4 Years',
-                            '5years+' => '5 Years & Above',
+                            '1year' => __('enums.experience_years.1year'),
+                            '2years' => __('enums.experience_years.2years'),
+                            '3years' => __('enums.experience_years.3years'),
+                            '4years' => __('enums.experience_years.4years'),
+                            '5years+' => __('enums.experience_years.5years_plus'),
                         ]),
                     Forms\Components\TextInput::make('ExpectedSalary')
-                        ->label('Expected Salary'),
+                        ->label(__('admin.job_candidates.expected_salary')),
                     Forms\Components\Select::make('HighestQualificationHeld')
                         ->options([
-                            'Secondary/High School' => 'Secondary/High School',
-                            'Associates Degree' => 'Associates Degree',
-                            'Bachelors Degree' => 'Bachelors Degree',
-                            'Masters Degree' => 'Masters Degree',
-                            'Doctorate Degree' => 'Doctorate Degree',
+                            'Secondary/High School' => __('enums.qualification.secondary'),
+                            'Associates Degree' => __('enums.qualification.associates'),
+                            'Bachelors Degree' => __('enums.qualification.bachelors'),
+                            'Masters Degree' => __('enums.qualification.masters'),
+                            'Doctorate Degree' => __('enums.qualification.doctorate'),
                         ])
-                        ->label('Highest Qualification Held'),
+                        ->label(__('admin.job_candidates.highest_qualification')),
                 ])->columns(2),
         ];
     }
@@ -116,14 +116,14 @@ class JobCandidatesResource extends Resource
     public static function candidateCurrentJobInformationFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Current Job Information')
+            Forms\Components\Section::make(__('admin.job_candidates.current_job_info'))
                 ->schema([
                     Forms\Components\TextInput::make('CurrentEmployer')
-                        ->label('Current Employer (Company Name)'),
+                        ->label(__('admin.job_candidates.current_employer')),
                     Forms\Components\TextInput::make('CurrentJobTitle')
-                        ->label('Current Job Title'),
+                        ->label(__('admin.job_candidates.current_job_title')),
                     Forms\Components\TextInput::make('CurrentSalary')
-                        ->label('Current Salary'),
+                        ->label(__('admin.job_candidates.current_salary')),
                 ])->columns(2),
         ];
     }
@@ -131,7 +131,7 @@ class JobCandidatesResource extends Resource
     public static function candidateAddressInformationFormLayout(): array
     {
         return [
-            Forms\Components\Section::make('Candidate Address Information')
+            Forms\Components\Section::make(__('admin.job_candidates.address_info'))
                 ->schema([
                     Forms\Components\TextInput::make('Street'),
                     Forms\Components\TextInput::make('City'),
@@ -147,36 +147,36 @@ class JobCandidatesResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('candidateProfile.full_name')
-                    ->label('Candidate Name'),
+                    ->label(__('admin.job_candidates.candidate_name')),
                 Tables\Columns\TextColumn::make('Email'),
                 Tables\Columns\TextColumn::make('CandidateStatus')
-                    ->label('Candidate Status'),
+                    ->label(__('admin.job_candidates.candidate_status')),
                 Tables\Columns\TextColumn::make('CandidateSource')
-                    ->label('Candidate Source')
+                    ->label(__('admin.job_candidates.candidate_source'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('recordOwner.name')
-                    ->label('Candidate Owner')
+                    ->label(__('admin.job_candidates.candidate_owner'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('mobile')
-                    ->label('Mobile')
+                    ->label(__('messages.mobile'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('ExpectedSalary')
-                    ->label('Expected Salary')
+                    ->label(__('admin.job_candidates.expected_salary'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('ExperienceInYears')
-                    ->label('Experience In Years')
+                    ->label(__('admin.job_candidates.experience_years'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('HighestQualificationHeld')
-                    ->label('Highest Qualification Held')
+                    ->label(__('admin.job_candidates.highest_qualification'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('CurrentEmployer')
-                    ->label('Current Employer Company Name')
+                    ->label(__('admin.job_candidates.current_employer_company'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('CurrentJobTitle')
-                    ->label('Current Job Title')
+                    ->label(__('admin.job_candidates.current_job_title'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('CurrentSalary')
-                    ->label('Current Salary')
+                    ->label(__('admin.job_candidates.current_salary'))
                     ->money(config('recruit.currency_field'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('Street')
@@ -193,7 +193,7 @@ class JobCandidatesResource extends Resource
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('ai_match_score')
-                    ->label('AI Match %')
+                    ->label(__('admin.job_candidates.ai_match_percent'))
                     ->getStateUsing(function (JobCandidates $record): ?string {
                         $match = CandidateMatchScore::where('candidate_id', $record->candidate)
                             ->where('job_opening_id', $record->JobId)
@@ -214,16 +214,16 @@ class JobCandidatesResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('ai_match')
-                    ->label('AI Match')
+                    ->label(__('admin.job_candidates.ai_match'))
                     ->icon('heroicon-o-cpu-chip')
                     ->color('info')
                     ->requiresConfirmation()
-                    ->modalHeading('Run AI Match Analysis')
-                    ->modalDescription('This will analyze the candidate against the job opening using AI and calculate a match score.')
+                    ->modalHeading(__('admin.job_candidates.run_ai_match'))
+                    ->modalDescription(__('admin.job_candidates.ai_match_modal_desc'))
                     ->action(function (JobCandidates $record) {
                         if (! $record->candidate || ! $record->JobId) {
-                            Notification::make()->title('Missing data')->danger()
-                                ->body('Candidate or Job is not associated.')->send();
+                            Notification::make()->title(__('admin.job_candidates.missing_data'))->danger()
+                                ->body(__('admin.job_candidates.missing_data_body'))->send();
 
                             return;
                         }
@@ -232,8 +232,8 @@ class JobCandidatesResource extends Resource
                         $job = JobOpenings::find($record->JobId);
 
                         if (! $candidate || ! $job) {
-                            Notification::make()->title('Not found')->danger()
-                                ->body('Candidate or Job record not found.')->send();
+                            Notification::make()->title(__('admin.job_candidates.not_found'))->danger()
+                                ->body(__('admin.job_candidates.not_found_body'))->send();
 
                             return;
                         }
@@ -242,18 +242,18 @@ class JobCandidatesResource extends Resource
                             $service = app(CandidateMatchingService::class);
                             $result = $service->matchCandidateToJob($candidate, $job);
 
-                            Notification::make()->title('AI Match Complete')->success()
-                                ->body("Match score: {$result->overall_score}%")->send();
+                            Notification::make()->title(__('admin.job_candidates.ai_match_complete'))->success()
+                                ->body(__('admin.job_candidates.ai_match_score_body', ['score' => $result->overall_score]))->send();
                         } catch (\Throwable $e) {
-                            Notification::make()->title('AI Match Failed')->danger()
+                            Notification::make()->title(__('admin.job_candidates.ai_match_failed'))->danger()
                                 ->body($e->getMessage())->send();
                         }
                     }),
                 Tables\Actions\Action::make('view_match_details')
-                    ->label('Match Details')
+                    ->label(__('admin.job_candidates.match_details'))
                     ->icon('heroicon-o-chart-bar')
                     ->color('gray')
-                    ->modalHeading('AI Match Score Details')
+                    ->modalHeading(__('admin.job_candidates.ai_match_score_details'))
                     ->modalContent(function (JobCandidates $record) {
                         $match = CandidateMatchScore::where('candidate_id', $record->candidate)
                             ->where('job_opening_id', $record->JobId)
@@ -268,7 +268,7 @@ class JobCandidatesResource extends Resource
                             ->exists();
                     }),
                 Tables\Actions\Action::make('schedule_interview')
-                    ->label('Schedule Interview')
+                    ->label(__('admin.job_candidates.schedule_interview'))
                     ->icon('heroicon-o-calendar')
                     ->color('warning')
                     ->form([
@@ -278,13 +278,13 @@ class JobCandidatesResource extends Resource
                         Forms\Components\Textarea::make('description')
                             ->rows(2),
                         Forms\Components\DateTimePicker::make('scheduled_at')
-                            ->label('Date & Time')
+                            ->label(__('admin.job_candidates.date_time'))
                             ->required()
                             ->native(false)
                             ->minutesStep(15)
                             ->default(now()->addDay()->setHour(10)->setMinute(0)),
                         Forms\Components\TextInput::make('duration_minutes')
-                            ->label('Duration (minutes)')
+                            ->label(__('admin.job_candidates.duration_minutes'))
                             ->numeric()
                             ->required()
                             ->default(fn () => app(JitsiSettings::class)->default_meeting_duration ?? 60)
@@ -310,9 +310,9 @@ class JobCandidatesResource extends Resource
                         }
 
                         Notification::make()
-                            ->title('Interview Scheduled')
+                            ->title(__('admin.job_candidates.interview_scheduled'))
                             ->success()
-                            ->body("Interview scheduled for {$interview->scheduled_at->format('M d, Y H:i')}")
+                            ->body(__('admin.job_candidates.interview_scheduled_body', ['date' => $interview->scheduled_at->format('M d, Y H:i')]))
                             ->send();
                     }),
                 Tables\Actions\ViewAction::make(),
@@ -322,12 +322,12 @@ class JobCandidatesResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('bulk_ai_match')
-                        ->label('AI Match Selected')
+                        ->label(__('admin.job_candidates.ai_match_selected'))
                         ->icon('heroicon-o-cpu-chip')
                         ->color('info')
                         ->requiresConfirmation()
-                        ->modalHeading('Run AI Match for Selected Candidates')
-                        ->modalDescription('This will queue AI match analysis for all selected candidates.')
+                        ->modalHeading(__('admin.job_candidates.run_ai_match_selected'))
+                        ->modalDescription(__('admin.job_candidates.run_ai_match_selected_desc'))
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records) {
                             $queued = 0;
@@ -338,8 +338,8 @@ class JobCandidatesResource extends Resource
                                 }
                             }
 
-                            Notification::make()->title('AI Match Queued')->success()
-                                ->body("Queued matching analysis for {$queued} candidates.")->send();
+                            Notification::make()->title(__('admin.job_candidates.ai_match_queued'))->success()
+                                ->body(__('admin.job_candidates.ai_match_queued_body', ['count' => $queued]))->send();
                         }),
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),

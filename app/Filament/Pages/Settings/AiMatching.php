@@ -23,7 +23,12 @@ class AiMatching extends Page
 
     protected ?string $heading = '';
 
-    protected static ?string $navigationLabel = 'AI Matching';
+    protected static ?string $navigationLabel = null;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.settings.ai_matching');
+    }
 
     public array $state = [];
 
@@ -60,9 +65,9 @@ class AiMatching extends Page
 
         if (abs($totalWeight - 1.0) > 0.01) {
             Notification::make()
-                ->title('Validation Error')
+                ->title(__('admin.settings.validation_error'))
                 ->danger()
-                ->body('The sum of all weights must equal 1.0. Current total: ' . number_format($totalWeight, 2))
+                ->body(__('admin.settings.weights_must_equal_one', ['total' => number_format($totalWeight, 2)]))
                 ->send();
 
             return;
@@ -80,9 +85,9 @@ class AiMatching extends Page
         $setting->save();
 
         Notification::make()
-            ->title('AI Matching settings updated')
+            ->title(__('admin.settings.ai_settings_updated'))
             ->success()
-            ->body('Your AI Matching configuration has been saved successfully.')
+            ->body(__('admin.settings.ai_settings_updated_body'))
             ->send();
     }
 
@@ -90,9 +95,9 @@ class AiMatching extends Page
     {
         if (empty($this->state['openai_api_key'])) {
             Notification::make()
-                ->title('API Key Required')
+                ->title(__('admin.settings.api_key_required'))
                 ->danger()
-                ->body('Please configure your OpenAI API key first.')
+                ->body(__('admin.settings.api_key_required_body'))
                 ->send();
 
             return;
@@ -101,9 +106,9 @@ class AiMatching extends Page
         GenerateAllEmbeddings::dispatch();
 
         Notification::make()
-            ->title('Embedding Generation Started')
+            ->title(__('admin.settings.embedding_started'))
             ->success()
-            ->body('Vector embeddings are being generated in the background for all candidates and job openings.')
+            ->body(__('admin.settings.embedding_started_body'))
             ->send();
     }
 

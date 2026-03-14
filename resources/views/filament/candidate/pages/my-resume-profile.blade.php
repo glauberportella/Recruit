@@ -12,7 +12,7 @@
                 type="submit"
                 wire:target="updateRecord"
             >
-                Update
+                {{ __('messages.update') }}
             </x-filament::button>
         </div>
 

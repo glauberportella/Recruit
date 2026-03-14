@@ -23,11 +23,21 @@ class CreateSystemUserForm extends SimplePage
     use InteractsWithFormActions;
     use InteractsWithForms;
 
-    protected ?string $subheading = 'System User Invitation - Verify and create account.';
+    protected ?string $subheading = null;
 
-    protected static ?string $title = 'Recruit System Invitation';
+    protected static ?string $title = null;
 
     protected ?string $heading = '';
+
+    public function getSubheading(): ?string
+    {
+        return __('candidate.invitation.system_user_subtitle');
+    }
+
+    public function getTitle(): string
+    {
+        return __('candidate.invitation.system_user_title');
+    }
 
     public ?array $data = [];
 
@@ -67,8 +77,8 @@ class CreateSystemUserForm extends SimplePage
         Notification::make('create_account_success')
             ->success()
             ->duration(10000)
-            ->title('Your Account is Ready')
-            ->body('You can now access the recruit system, by using the credential you\'ve provided.')
+            ->title(__('candidate.invitation.account_ready'))
+            ->body(__('candidate.invitation.account_ready_body'))
             ->send();
 
         $this->redirect(filament()->getDefaultPanel()->getLoginUrl());
@@ -80,19 +90,19 @@ class CreateSystemUserForm extends SimplePage
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('messages.name'))
                     ->disabled(),
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->label('Email')
+                    ->label(__('messages.email'))
                     ->disabled(),
                 Password::make('password')
                     ->minLength(8)
                     ->confirmed()
-                    ->label('Password'),
+                    ->label(__('messages.password')),
                 Password::make('password_confirmation')
                     ->minLength(8)
-                    ->label('Confirm Password'),
+                    ->label(__('messages.confirm_password')),
             ])
             ->statePath('data');
     }
@@ -107,7 +117,7 @@ class CreateSystemUserForm extends SimplePage
     protected function getAuthenticateFormAction(): Action
     {
         return Action::make('authenticate')
-            ->label('Verify & Create Account')
+            ->label(__('candidate.invitation.verify_create_account'))
             ->color(Color::Gray)
             ->submit('create');
     }

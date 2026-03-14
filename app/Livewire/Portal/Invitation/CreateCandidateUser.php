@@ -26,11 +26,21 @@ class CreateCandidateUser extends SimplePage
 
     public candidatePortalInvitation $candidatePortalInvitation;
 
-    protected ?string $subheading = 'Candidate Portal Invitation - Verify and create account.';
+    protected ?string $subheading = null;
 
-    protected static ?string $title = 'Candidate Portal Invitation';
+    protected static ?string $title = null;
 
     protected ?string $heading = '';
+
+    public function getSubheading(): ?string
+    {
+        return __('candidate.invitation.candidate_portal_subtitle');
+    }
+
+    public function getTitle(): string
+    {
+        return __('candidate.invitation.candidate_portal_title');
+    }
 
     public ?array $data = [];
 
@@ -66,8 +76,8 @@ class CreateCandidateUser extends SimplePage
         Notification::make('create_account_success')
             ->success()
             ->duration(10000)
-            ->title('Your Candidate Portal Account is Ready')
-            ->body('You can now access your candidate information in the portal, by using the credential you\'ve provided.')
+            ->title(__('candidate.invitation.candidate_account_ready'))
+            ->body(__('candidate.invitation.candidate_account_ready_body'))
             ->send();
 
         $this->redirect(filament()->getPanel('candidate')->getLoginUrl());
@@ -79,19 +89,19 @@ class CreateCandidateUser extends SimplePage
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('messages.name'))
                     ->disabled(),
                 Forms\Components\TextInput::make('email')
                     ->email()
-                    ->label('Email')
+                    ->label(__('messages.email'))
                     ->disabled(),
                 Password::make('password')
                     ->minLength(5)
                     ->confirmed()
-                    ->label('Password'),
+                    ->label(__('messages.password')),
                 Password::make('password_confirmation')
                     ->minLength(5)
-                    ->label('Confirm Password'),
+                    ->label(__('messages.confirm_password')),
             ])
             ->statePath('data');
     }
@@ -106,7 +116,7 @@ class CreateCandidateUser extends SimplePage
     protected function getAuthenticateFormAction(): Action
     {
         return Action::make('authenticate')
-            ->label('Create Account')
+            ->label(__('candidate.invitation.create_account'))
             ->color(Color::Gray)
             ->submit('create');
     }

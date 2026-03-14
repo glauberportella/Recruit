@@ -1,5 +1,5 @@
 @extends('errors::minimal')
 
-@section('title', __('Link Expired'))
+@section('title', __('messages.link_expired'))
 @section('code', '410')
-@section('message', 'Link Expired')
+@section('message', __('messages.link_expired'))

@@ -65,20 +65,20 @@ class SavedJobResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('jobOpening.JobTitle')
                     ->searchable()
-                    ->label('Job Title'),
+                    ->label(__('candidate.portal.job_title')),
                 Tables\Columns\TextColumn::make('jobOpening.Salary')
-                    ->label('Salary'),
+                    ->label(__('messages.salary')),
                 Tables\Columns\IconColumn::make('jobOpening.RemoteJob')
-                    ->label('Remote')
+                    ->label(__('messages.remote'))
                     ->searchable()
                     ->boolean(),
                 Tables\Columns\TextColumn::make('jobOpening.JobType')
                     ->toggleable()
                     ->searchable()
-                    ->label('Type'),
+                    ->label(__('messages.type')),
                 Tables\Columns\TextColumn::make('jobOpening.JobDescription')
                     ->toggleable()
-                    ->label('Description')
+                    ->label(__('messages.description'))
                     ->limit(length: 50),
             ])
             ->filters([

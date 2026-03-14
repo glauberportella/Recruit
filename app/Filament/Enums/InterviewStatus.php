@@ -16,7 +16,7 @@ enum InterviewStatus: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->value;
+        return __('enums.interview_status.' . $this->value);
     }
 
     public function getColor(): string
