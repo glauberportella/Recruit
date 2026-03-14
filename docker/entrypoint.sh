@@ -15,7 +15,7 @@ echo "[entrypoint] PostgreSQL is ready."
 # Run setup on first boot (check if migrations table exists)
 if ! php artisan migrate:status > /dev/null 2>&1; then
     echo "[entrypoint] First boot detected — running initial setup..."
-    /var/www/html/docker/setup.sh
+    /bin/sh /var/www/html/docker/setup.sh
 else
     echo "[entrypoint] Database already initialized — running pending migrations..."
     php artisan migrate --force

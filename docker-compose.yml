@@ -10,6 +10,8 @@ services:
     container_name: recruit-app
     restart: unless-stopped
     working_dir: /var/www/html
+    entrypoint: ["/bin/sh", "/var/www/html/docker/entrypoint.sh"]
+    command: ["php-fpm"]
     volumes:
       - .:/var/www/html
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
