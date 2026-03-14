@@ -221,7 +221,9 @@ Todos os containers devem estar com status `Up (healthy)` ou `Up`:
 
 ## 5. Configuração do Nginx (Reverse Proxy)
 
-Na máquina host, configure um Nginx como reverse proxy para encaminhar tráfego HTTPS para os containers.
+Na máquina host, configure um Nginx como reverse proxy para encaminhar tráfego para os containers.
+
+> **Importante**: Configure o Nginx **apenas com HTTP** nesta etapa. O SSL será configurado automaticamente pelo Certbot na [seção 6](#6-ssltls-com-lets-encrypt).
 
 ### Instalar Nginx no Host
 
@@ -237,28 +239,8 @@ Crie `/etc/nginx/sites-available/recruit`:
 server {
     listen 80;
     server_name recruit.seudominio.com.br;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name recruit.seudominio.com.br;
-
-    ssl_certificate     /etc/letsencrypt/live/recruit.seudominio.com.br/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/recruit.seudominio.com.br/privkey.pem;
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers HIGH:!aNULL:!MD5;
-    ssl_prefer_server_ciphers on;
 
     client_max_body_size 100M;
-
-    # Headers de segurança
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     location / {
         proxy_pass http://127.0.0.1:8800;
@@ -279,18 +261,6 @@ Crie `/etc/nginx/sites-available/jitsi`:
 server {
     listen 80;
     server_name jitsi.seudominio.com.br;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name jitsi.seudominio.com.br;
-
-    ssl_certificate     /etc/letsencrypt/live/jitsi.seudominio.com.br/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/jitsi.seudominio.com.br/privkey.pem;
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers HIGH:!aNULL:!MD5;
 
     location / {
         proxy_pass http://127.0.0.1:8880;
@@ -310,8 +280,8 @@ server {
 ### Ativar os Sites
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/recruit /etc/nginx/sites-enabled/
-sudo ln -s /etc/nginx/sites-available/jitsi /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/recruit /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/jitsi /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -320,16 +290,38 @@ sudo systemctl reload nginx
 
 ## 6. SSL/TLS com Let's Encrypt
 
+O Certbot com a flag `--nginx` irá **automaticamente**:
+- Obter os certificados SSL
+- Adicionar os blocos `listen 443 ssl` nas configurações do Nginx
+- Configurar o redirect HTTP → HTTPS (301)
+- Configurar protocolos e ciphers seguros
+
 ```bash
 # Instalar Certbot
 sudo apt install -y certbot python3-certbot-nginx
 
-# Gerar certificados
+# Gerar certificados (o Certbot modifica automaticamente os arquivos do Nginx)
 sudo certbot --nginx -d recruit.seudominio.com.br
 sudo certbot --nginx -d jitsi.seudominio.com.br
 
 # Renovação automática (já configurada pelo certbot, mas verifique)
 sudo certbot renew --dry-run
+```
+
+Após o Certbot, adicione os headers de segurança no bloco `server` HTTPS de `/etc/nginx/sites-available/recruit`:
+
+```nginx
+    # Headers de segurança (adicionar dentro do bloco server 443)
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+```
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
 ---
