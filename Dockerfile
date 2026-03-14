@@ -59,7 +59,6 @@ WORKDIR /var/www/html
 COPY --chown=$user:$user . .
 
 # Make entrypoint and setup scripts executable
-COPY docker/entrypoint.sh docker/setup.sh docker/
 RUN chmod +x docker/entrypoint.sh docker/setup.sh
 
 # Install PHP dependencies
