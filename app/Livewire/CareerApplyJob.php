@@ -21,11 +21,13 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class CareerApplyJob extends Component implements HasActions, HasForms
 {
     use InteractsWithActions;
     use InteractsWithForms;
+    use WithFileUploads;
 
     public ?array $data = [];
 
@@ -42,10 +44,10 @@ class CareerApplyJob extends Component implements HasActions, HasForms
         // search for the job reference number, if not valid, redirect to all job
         $this->jobOpeningDetails($jobReferenceNumber);
         $this->referenceNumber = $jobReferenceNumber;
-
+        $this->form->fill();
     }
 
-    public function updated()
+    public function updatedReferenceNumber()
     {
         $this->jobOpeningDetails($this->referenceNumber);
     }
@@ -255,7 +257,6 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                 Forms\Components\FileUpload::make('attachment')
                     ->preserveFilenames()
                     ->storeFileNamesIn('attachmentName')
-                    ->disk('local')
                     ->directory('JobCandidate-attachments')
                     ->visibility('private')
                     ->openable()
@@ -265,6 +266,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                         'application/pdf',
                     ])
                     ->required()
+                    ->columnSpanFull()
                     ->label(__('candidate.application.resume')),
             ];
     }
