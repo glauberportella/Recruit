@@ -20,6 +20,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/www/html/vendor/autoload.php && php -r 'echo 1;' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
 
   # Nginx Web Server
   nginx:
@@ -94,7 +100,7 @@ services:
       - recruit
     depends_on:
       app:
-        condition: service_started
+        condition: service_healthy
       redis:
         condition: service_healthy
 
@@ -119,7 +125,7 @@ services:
       - recruit
     depends_on:
       app:
-        condition: service_started
+        condition: service_healthy
 
   # Mailpit (local email testing)
   mailpit:
@@ -190,6 +196,8 @@ services:
       JWT_ACCEPTED_ISSUERS: ${JITSI_JWT_ACCEPTED_ISSUERS:-recruit}
       JWT_ACCEPTED_AUDIENCES: ${JITSI_JWT_ACCEPTED_AUDIENCES:-recruit}
       JWT_ALLOW_EMPTY: 0
+      JICOFO_AUTH_PASSWORD: ${JITSI_JICOFO_AUTH_PASSWORD:-jicofo_pass_change_me}
+      JVB_AUTH_PASSWORD: ${JITSI_JVB_AUTH_PASSWORD:-jvb_pass_change_me}
       TZ: ${TZ:-UTC}
       XMPP_DOMAIN: meet.jitsi
       XMPP_AUTH_DOMAIN: auth.meet.jitsi

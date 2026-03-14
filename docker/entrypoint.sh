@@ -7,6 +7,19 @@ echo "========================================="
 
 # Wait for PostgreSQL (extra safety beyond healthcheck)
 echo "[entrypoint] Waiting for PostgreSQL..."
+
+# Install PHP dependencies if vendor/ is missing (volume mount overwrites image files)
+if [ ! -f /var/www/html/vendor/autoload.php ]; then
+    echo "[entrypoint] Installing Composer dependencies..."
+    composer install --no-interaction --optimize-autoloader --no-dev
+fi
+
+# Build frontend assets if needed
+if [ ! -d /var/www/html/public/build ]; then
+    echo "[entrypoint] Building frontend assets..."
+    npm ci --no-audit && npm run build
+fi
+
 until php -r "new PDO('pgsql:host='.getenv('DB_HOST').';port='.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));" 2>/dev/null; do
     sleep 2
 done
