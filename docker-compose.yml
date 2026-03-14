@@ -10,8 +10,6 @@ services:
     container_name: recruit-app
     restart: unless-stopped
     working_dir: /var/www/html
-    entrypoint: ["/bin/sh", "/var/www/html/docker/entrypoint.sh"]
-    command: ["php-fpm"]
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
