@@ -5,6 +5,7 @@ namespace App\Livewire;
 use AbanoubNassem\FilamentGRecaptchaField\Forms\Components\GRecaptcha;
 use Afatmustafa\FilamentTurnstile\Forms\Components\Turnstile;
 use App\Filament\Enums\JobCandidateStatus;
+use App\Models\Attachments;
 use App\Models\Candidates;
 use App\Models\JobCandidates;
 use App\Models\JobOpenings;
@@ -26,7 +27,7 @@ class CareerApplyJob extends Component implements HasActions, HasForms
     use InteractsWithActions;
     use InteractsWithForms;
 
-    public ?array $data = ['attachment' => null];
+    public ?array $data = [];
 
     public ?string $captcha = '';
 
@@ -104,6 +105,17 @@ class CareerApplyJob extends Component implements HasActions, HasForms
         ]);
 
         if ($candidate && $job_candidates) {
+            // Save CV attachment
+            if (! empty($data['attachment'])) {
+                Attachments::create([
+                    'attachment' => $data['attachment'],
+                    'attachmentName' => $data['attachmentName'] ?? basename($data['attachment']),
+                    'category' => 'Resume',
+                    'attachmentOwner' => $job_candidates->id,
+                    'moduleName' => 'JobCandidates',
+                ]);
+            }
+
             Notification::make()
                 ->title(__('candidate.career.application_submitted'))
                 ->success()
@@ -242,6 +254,8 @@ class CareerApplyJob extends Component implements HasActions, HasForms
                     ]),
                 Forms\Components\FileUpload::make('attachment')
                     ->preserveFilenames()
+                    ->storeFileNamesIn('attachmentName')
+                    ->disk('local')
                     ->directory('JobCandidate-attachments')
                     ->visibility('private')
                     ->openable()
